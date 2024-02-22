@@ -8,6 +8,6 @@ export const Container = styled.div`
 
 export const Input = styled.input`
     padding:10px;
-
+    width:100%;
 
 `;

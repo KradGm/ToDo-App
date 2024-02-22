@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     display: flex;
-    background-color: #616161;
+    background-color: #05445E;
     padding: 10px;
     border-radius:10px;
     margin-bottom:10px;
@@ -24,14 +24,27 @@ export const Container = styled.div`
 `;
 
 export const ButtonEdit = styled.button`
-    background-color:yellow;
+    background-color:white;
+    border:0px;
     border-radius:50px;
-    font-size:larger;
-
+    font-size:x-large;
+    transition: transform 0.3s ease;
+    &:hover {
+        cursor: pointer;
+        border: 1px solid yellow;
+        transform: scale(1.1);
+      }
 `;
 export const ButtonDelete = styled.button`
+    margin-left:5px;
     background-color:white;
+    border:0px;
     border-radius:50px;
-    font-size:larger;
-
+    font-size:x-large;
+    transition: transform 0.3s ease;
+    &:hover {
+        cursor: pointer;
+        border: 1px solid red;
+        transform: scale(1.1);
+      }
 `;

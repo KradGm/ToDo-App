@@ -6,7 +6,7 @@ using TodoApi.Models;
 namespace ToDoProject.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("")]
 [EnableCors]
 public class TaskController : ControllerBase
 {
@@ -16,21 +16,38 @@ public class TaskController : ControllerBase
     {
         _context = context;
     }
-    [HttpGet("/TaskList")]
+    [HttpGet("api/task-list")]
     public ActionResult<IEnumerable<Task>> GetAllTasks()
     {
         return _context.Tasks.ToList();
     }
-
-    [HttpPost]
-    public async Task<ActionResult<Task>> PostTask(Task task)
+    [HttpGet("api/task-list/{name}")]
+    public  ActionResult<IEnumerable<Task>> GetTaskByName(string name)
     {
-        _context.Tasks.Add(task);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetTaskByID), new { id = task.Id }, task);
+        var tasklist = _context.Tasks.ToList();
+        var filterList = new List<Task>();
+        if(tasklist != null){
+        for(int i=0; i<tasklist.Count; i++){
+            if(tasklist[i].TaskName != null && tasklist[i].TaskName.Contains(name)){
+                filterList.Add(tasklist[i]);
+            }
+        };
+        }
+        
+        return filterList;
     }
-    [HttpGet("{id}")]
+
+    [HttpPost("api/tasks")]
+    public async Task<ActionResult<Task>> PostTask(Task newTask)
+    {
+        
+        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == newTask.TaskName))
+          throw new Exception("Registro duplicado");
+        _context.Tasks.Add(newTask);
+        await _context.SaveChangesAsync();  
+        return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
+    }
+    [HttpGet("api/tasks/{id}")]
     public async Task<ActionResult<Task>> GetTaskByID(long id){
         var task = await _context.Tasks.FindAsync(id);
         if(task == null)
@@ -40,7 +57,7 @@ public class TaskController : ControllerBase
     return task;
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("api/tasks/{id}")]
     public async Task<IActionResult> UpdateTask(long id, Task task){
         if(id != task.Id){
             return BadRequest();
@@ -58,7 +75,7 @@ public class TaskController : ControllerBase
         }
         return NoContent();
     }
-    [HttpDelete("{id}")]
+    [HttpDelete("api/tasks/{id}")]
     public async Task<ActionResult> DeleteTask(long id){
         var taskToDelete = await _context.Tasks.FindAsync(id);
         if(taskToDelete == null){

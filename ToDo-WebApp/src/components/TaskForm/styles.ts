@@ -6,11 +6,16 @@ export const Container = styled.div`
     padding: 10px;
     display:flex;
     justify-content:center;
-
-    
+    form button{
+        margin-top:10px;
+    }
 `;
 
 export const Button = styled.button`
     border-radius 1px;
     display:flex;
+    &:hover {
+        cursor: pointer;
+        border: 1px solid red;
+      }
 `;

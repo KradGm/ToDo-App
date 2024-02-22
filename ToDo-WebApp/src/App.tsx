@@ -15,17 +15,18 @@ const App = () => {
   const fetchTaskList = useCallback(async()=>{
     try{
     const response =  await api
-      .get("TaskList");
+      .get("api/task-list");
      
     setList(response.data) 
   }catch(error){
     console.error(error);
   }
-  }, [list]);
+  }, []);
 
   useEffect(()=>{
     fetchTaskList()
-  },[fetchTaskList])
+    console.log(list)
+  },[ fetchTaskList])
 
   return (
     <Components.Container>
@@ -33,8 +34,8 @@ const App = () => {
         <Components.Header>
           Lista de Tarefas
         </Components.Header>
-        <InputComp/>
-        <AddTask/>
+        <InputComp setGlobalList={setList} />
+              <AddTask/>
         {list.map(task=>(
             <TaskComp key={task.id} task={task}></TaskComp>
           )

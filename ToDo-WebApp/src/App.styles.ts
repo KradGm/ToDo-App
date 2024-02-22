@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    background-color: #a8a8a8;
+    background-color: #D4F1F4;
     color: #797A81;
     min-height: 100vh;
     margin:0;
@@ -17,7 +17,7 @@ export const Area = styled.div`
 export const Header = styled.h1`
     margin: 0;
     padding: 0;
-    color: #FFF;
+    color: #189AB4;
     text-align: center;
     border-bottom:1px solid #444;
     padding-bottom:20px;

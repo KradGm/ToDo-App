@@ -1,6 +1,8 @@
+import {  Button, Input } from 'antd';
 import api from '../../services/Api';
 import * as Component from './styles';
 import { FormEvent } from 'react';
+import TextArea from 'antd/es/input/TextArea';
 
 export const TaskForm = () => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -8,11 +10,12 @@ export const TaskForm = () => {
 
         const formData = new FormData(event.currentTarget);
         const taskName = formData.get("taskName");
-        const taskStatus = formData.get("status");
+        let taskStatus = formData.get("status");
         const description = formData.get("description");
+        taskStatus = taskStatus ? taskStatus.toString() : "";
 
         try {
-            const response = await api.post('api/Task', { taskName: taskName, taskStatus: taskStatus, description: description });
+            const response = await api.post('api/tasks', { taskName: taskName, status: parseInt(taskStatus), description: description });
             const newTask = response.data;
             console.log(newTask);
         } catch (error) {
@@ -27,7 +30,7 @@ export const TaskForm = () => {
                 <label>
                     Nome da Tarefa:
                     <br />
-                    <input type="text" name="taskName" required />
+                    <Input type="text" name="taskName"  required/>
                 </label>
                 <br />
                 <label>
@@ -43,10 +46,10 @@ export const TaskForm = () => {
                 <label>
                     Descrição:
                     <br />
-                    <textarea name="description" required />
+                    <TextArea name="description" rows={4} placeholder="O maximo de  caracteres é 20" maxLength={20} />
                 </label>
                 <br />
-                <Component.Button>Criar Tarefa</Component.Button>
+                <Component.Button>Criar</Component.Button>
             </form>
         </Component.Container>
     );

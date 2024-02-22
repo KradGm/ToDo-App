@@ -2,6 +2,7 @@ import { FormEvent } from 'react';
 import { Task } from '../../Model/Task';
 import api from '../../services/Api';
 import * as Component from './styles';
+import { CloseOutlined, SaveTwoTone } from '@ant-design/icons';
 
 type Props = {
     task: Task;
@@ -28,6 +29,7 @@ export const EditForm = ({ task }: Props) =>{
     return(
             <Component.Modal>
             <Component.EditForm onSubmit={handleSubmit}>
+            <Component.CloseButton><CloseOutlined /></Component.CloseButton>
             <label>Nome da Tarefa:</label>
             <input name="taskName" type="text" defaultValue={task.taskName}/>
             <label>
@@ -40,8 +42,8 @@ export const EditForm = ({ task }: Props) =>{
                     </select>
                 </label>
             <label>Descrição da Tarefa</label>
-            <textarea  name="description" defaultValue={task.description.toString()}/>
-            <Component.SaveButton>💾</Component.SaveButton>
+            <textarea  name="description" defaultValue={task.description}/>
+            <Component.SaveButton><SaveTwoTone /></Component.SaveButton>
             </Component.EditForm>
             </Component.Modal>
     );

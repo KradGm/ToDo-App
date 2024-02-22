@@ -1,3 +1,4 @@
+import { PlusCircleFilled } from '@ant-design/icons';
 import { TaskForm } from '../TaskForm';
 import * as Component from './styles';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ export const AddTask = () => {
 
     return (
         <Component.Container>
-            <button onClick={handleClick}>➕</button>
+            <Component.Button onClick={handleClick}><PlusCircleFilled /></Component.Button>
             {showForm && <TaskForm />}
         </Component.Container>
     );

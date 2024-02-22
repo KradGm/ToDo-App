@@ -1,9 +1,11 @@
 import * as Component from './styles';
 import { Task } from '../../Model/Task';
 import api from '../../services/Api';
-import {  useEffect, useState } from 'react';
+import {  useCallback, useEffect, useState } from 'react';
 import { EditForm } from '../EditForm';
 import React from 'react';
+import { DeleteFilled, EditFilled } from '@ant-design/icons';
+import { Select } from 'antd';
 
 
 type Props = {
@@ -15,21 +17,19 @@ export const TaskComp = ({ task }: Props) => {
     const [showEditForm, setShowEditForm] = useState(false);
     const editFormRef = React.useRef<HTMLDivElement>(null);
 
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const statusNumerico = parseInt(event.target.value);
-        setStatus(event.target.value);
-        setStatus(statusNumerico.toString());
+    const handleChange = useCallback((value: number) => {
+        setStatus(value.toString());
         
         try {
-            api.put(`api/Task/${task.id}`, { id: task.id, taskName: task.taskName, status: statusNumerico, description: task.description })
-            console.log(`Status atualizado para: ${task.status}`);
+            api.put(`api/tasks/${task.id}`, { id: task.id,taskName:task.taskName, status: value })
+            console.log(`Status atualizado para: ${status}`);
         }
-        catch (error) {
-            console.error(error);
-        }
-    };
+        catch (error) {console.error(error);}
+        
+        console.log({id:task.id, status:value});
+    },[]);
 
-    const handleDelete = async (taskid: number) => {
+    const handleDelete = useCallback(async (taskid: number) => {
         const confirmAct = window.confirm("Você tem certeza disso?");
 
         if (confirmAct) {
@@ -39,41 +39,42 @@ export const TaskComp = ({ task }: Props) => {
                 console.error(error);
             }
         }
-    }
-    const handleClick = () => {
+    }, []);
 
+    const handleClick = useCallback(() => {
+        console.log("oi")
         setShowEditForm(true);
-    }
+    }, []);
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = useCallback((event: MouseEvent) => {
             if (editFormRef.current && !editFormRef.current.contains(event.target as Node)) {
             setShowEditForm(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [handleClickOutside]);
 
 
     return (
         <Component.Container>
             <Component.Container>
-                <select value={status} onChange={handleChange} >
-                    <option value="0">Concluido</option>
-                    <option value="1">Não iniciado</option>
-                    <option value="2">Em andamento</option>
-                </select>
+                <Select  style={{ width: 120 }} defaultValue={task.status}  onChange={handleChange}>
+                    <Select.Option value={0}>Concluido</Select.Option>
+                    <Select.Option value={1}>Não iniciado</Select.Option>
+                    <Select.Option value={2}>Em andamento</Select.Option>
+                </Select>
                 <label>{task.taskName}</label>
                 <p>{task.description}</p>
             </Component.Container>
             <Component.Container>
-                <Component.ButtonEdit onClick={handleClick}>✏️</Component.ButtonEdit>
+                <Component.ButtonEdit onClick={handleClick}><EditFilled /></Component.ButtonEdit>
                 {showEditForm ?<div ref={editFormRef}> <EditForm key={task.id} task={task} /> </div>: null}
-                <Component.ButtonDelete onClick={() => handleDelete(task.id)}>🗑️</Component.ButtonDelete>
+                <Component.ButtonDelete onClick={() => handleDelete(task.id)}><DeleteFilled /></Component.ButtonDelete>
             </Component.Container>
 
         </Component.Container>
