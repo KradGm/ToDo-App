@@ -19,7 +19,19 @@ export const Container = styled.div`
     }
     button{
         width:50px;
-        background-color:red;
         height:50px;
     }
+`;
+
+export const ButtonEdit = styled.button`
+    background-color:yellow;
+    border-radius:50px;
+    font-size:larger;
+
+`;
+export const ButtonDelete = styled.button`
+    background-color:white;
+    border-radius:50px;
+    font-size:larger;
+
 `;

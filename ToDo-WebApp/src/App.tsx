@@ -5,11 +5,12 @@ import { Task } from './Model/Task';
 import {TaskComp} from './components/Task';
 import api from './services/Api';
 import {AddTask} from './components/AddTask';
+import { InputComp } from './components/Input';
 
 
 const App = () => {
   
-  const [list, setList] = useState<Task[]>();
+  const [list, setList] = useState<Task[]>([]);
 
   const fetchTaskList = useCallback(async()=>{
     try{
@@ -32,12 +33,11 @@ const App = () => {
         <Components.Header>
           Lista de Tarefas
         </Components.Header>
+        <InputComp/>
         <AddTask/>
-        {list &&
-          list.map(task=>(
+        {list.map(task=>(
             <TaskComp key={task.id} task={task}></TaskComp>
           )
-
           )
         }
       </Components.Area>

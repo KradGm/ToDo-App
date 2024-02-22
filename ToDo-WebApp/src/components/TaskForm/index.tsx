@@ -8,7 +8,7 @@ export const TaskForm = () => {
 
         const formData = new FormData(event.currentTarget);
         const taskName = formData.get("taskName");
-        const taskStatus = formData.get("taskStatus");
+        const taskStatus = formData.get("status");
         const description = formData.get("description");
 
         try {
@@ -20,7 +20,6 @@ export const TaskForm = () => {
         }
 
 
-        console.log({ taskName, taskStatus, description });
     };
     return (
         <Component.Container>
@@ -34,7 +33,7 @@ export const TaskForm = () => {
                 <label>
                     Status da Tarefa:
                     <br />
-                    <select name="taskStatus" required>
+                    <select name="status" required>
                         <option value="0">Concluido</option>
                         <option value="1">Não iniciado</option>
                         <option value="2">Em andamento</option>

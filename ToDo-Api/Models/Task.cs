@@ -7,7 +7,7 @@ public class Task{
 
     public required string TaskName {get;set;}
 
-    public Status status{get;set;} 
+    public Status Status{get;set;} 
 
     public required string Description{get;set;}
 
