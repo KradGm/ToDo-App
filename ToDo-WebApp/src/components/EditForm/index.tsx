@@ -8,21 +8,23 @@ type Props = {
     task: Task;
 }
 export const EditForm = ({ task }: Props) =>{
+
     const handleSubmit = async(event: FormEvent<HTMLFormElement>) =>  {
         const formData = new FormData(event.currentTarget)
-        const newTaskName = formData.get("taskName");
-        const newDescription = formData.get("description");
-        const newStatus = formData.get("status");
+        const taskName = formData.get("taskName");
+        const description = formData.get("description");
+        const status = formData.get("status");
 
-        if(newStatus){
-            var parseStatus = newStatus.toString();
-        } else{
-            return 'parseStatus nao existe'
-        }
-
-        const numberStatus = parseInt(parseStatus);
+        if(status){
+            status.toString();
+         } else{
+             return 'parseStatus nao existe'
+         }
+ 
+         const numberStatus = parseInt(status);
     
-        api.put(`api/Task/${task.id}`, {id:task.id, taskName:newTaskName, status:numberStatus, description:newDescription} );
+        api.put(`api/tasks/${task.id}`,{id:task.id, taskName:taskName, status:numberStatus, description:description});
+        console.log({id:task.id, taskName:taskName, status:numberStatus, description:description});
     }
     
     

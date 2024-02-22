@@ -2115,19 +2115,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\eoliveira\\.nuget\\packages\\": {}
+    "C:\\Users\\enzol\\.nuget\\packages\\": {},
+    "C:\\Users\\enzol\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eoliveira\\Estudos\\ToDo-App\\ToDo-Api\\ToDoProject.csproj",
+      "projectUniqueName": "C:\\Projetos\\ToDoProject\\ToDo-Api\\ToDoProject.csproj",
       "projectName": "ToDoProject",
-      "projectPath": "C:\\Users\\eoliveira\\Estudos\\ToDo-App\\ToDo-Api\\ToDoProject.csproj",
-      "packagesPath": "C:\\Users\\eoliveira\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eoliveira\\Estudos\\ToDo-App\\ToDo-Api\\obj\\",
+      "projectPath": "C:\\Projetos\\ToDoProject\\ToDo-Api\\ToDoProject.csproj",
+      "packagesPath": "C:\\Users\\enzol\\.nuget\\packages\\",
+      "outputPath": "C:\\Projetos\\ToDoProject\\ToDo-Api\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Users\\enzol\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\eoliveira\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\enzol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\enzol\\AppData\\Roaming\\NuGet\\config\\Godot.Offline.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
