@@ -45,13 +45,14 @@ export const TaskComp = ({ task, handlerUpdate }: Props) => {
     }, []);
 
     const handleClick = useCallback(() => {
+        
         setShowEditForm(true);
     }, []);
 
     return (
         <Component.Container>
             <Component.Container>
-                <Select  style={{ width: 120 }} defaultValue={task.status}  onChange={handleChange}>
+                <Select  style={{ width: 150 }} defaultValue={task.status}  onChange={handleChange}>
                     <Select.Option value={0}>Concluido</Select.Option>
                     <Select.Option value={1}>Não iniciado</Select.Option>
                     <Select.Option value={2}>Em andamento</Select.Option>

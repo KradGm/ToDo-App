@@ -31,7 +31,7 @@ const App = () => {
     <Components.Container>
       <Components.Area>
         <Components.Header>
-          Lista de Tarefas
+          LISTA DE TAREFAS
         </Components.Header>
         <InputComp setGlobalList={setList} />
               <AddTask handlerUpdate={fetchTaskList}/>

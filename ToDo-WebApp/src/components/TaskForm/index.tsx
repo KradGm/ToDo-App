@@ -45,11 +45,11 @@ export const TaskForm = ({handlerUpdate}:Props) => {
                 <Form.Item<Task> 
                 label="Nome da Tarefa:"
                 name="taskName" >
-                    <Input maxLength={20} required />
+                    <Input placeholder='Nome da tarefa' maxLength={20} required />
                 </Form.Item>
                 <Form.Item<Task> label="Select"
                 name="status">
-                    <Select>    
+                    <Select placeholder='Selecione o estado da tarefa'>    
                         <Select.Option value="0">Concluido</Select.Option>
                         <Select.Option value="1">Não iniciado</Select.Option>
                         <Select.Option value="2">Em andamento</Select.Option>

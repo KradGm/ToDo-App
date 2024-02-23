@@ -4,7 +4,9 @@ export const Container = styled.div`
     background-color: #D4F1F4;
     color: #797A81;
     min-height: 100vh;
-    margin:0;
+    margin:0px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
 `;
 
 export const Area = styled.div`
