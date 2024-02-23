@@ -2,9 +2,11 @@ import { PlusCircleFilled } from '@ant-design/icons';
 import { TaskForm } from '../TaskForm';
 import * as Component from './styles';
 import { useState } from 'react';
+type Props = {
+    handlerUpdate: ()=> void
+}
 
-
-export const AddTask = () => {
+export const AddTask = ({handlerUpdate}:Props) => {
     const [showForm, setShowForm] = useState(false);
 
     const handleClick = () => {
@@ -14,7 +16,7 @@ export const AddTask = () => {
     return (
         <Component.Container>
             <Component.Button onClick={handleClick}><PlusCircleFilled /></Component.Button>
-            {showForm && <TaskForm />}
+            {showForm && <TaskForm handlerUpdate={handlerUpdate} />}
         </Component.Container>
     );
 }

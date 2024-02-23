@@ -10,7 +10,10 @@ import {
 } from 'antd';
 import { Task } from '../../Model/Task';
 
-export const TaskForm = () => {
+type Props = {
+    handlerUpdate: ()=> void
+}
+export const TaskForm = ({handlerUpdate}:Props) => {
     const [form] = Form.useForm();
     const onFinish = useCallback( async () => {
         const endPoint = 'api/tasks';
@@ -26,6 +29,7 @@ export const TaskForm = () => {
         } catch (error) {
             console.error(error);
         }
+        handlerUpdate();
     }, []);
     useEffect(() => {
     
@@ -33,7 +37,8 @@ export const TaskForm = () => {
 
     return (
         <Component.Container>
-            <Form form={form}
+            <Form 
+                form={form}
                 onFinish={onFinish}
                 layout="vertical"
                 name='basic'>

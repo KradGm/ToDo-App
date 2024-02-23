@@ -26,7 +26,7 @@ export const EditForm = ({ task }: Props) => {
     return (
         <Component.Modal>
             <Component.EditForm onSubmit={handleSubmit}>
-                <Component.CloseButton><CloseOutlined /></Component.CloseButton>
+                <Component.CloseButton ><CloseOutlined /></Component.CloseButton>
                 <Form form={form}
                     onFinish={handleSubmit}
                     layout="vertical"

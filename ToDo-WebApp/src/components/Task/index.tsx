@@ -7,15 +7,17 @@ import React from 'react';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { Select } from 'antd';
 
+
 type Props = {
     task: Task;
+    handlerUpdate: ()=> void
 }
 
-export const TaskComp = ({ task }: Props) => {
+export const TaskComp = ({ task, handlerUpdate }: Props) => {
     const [status, setStatus] = useState(task.status.toString());
     const [showEditForm, setShowEditForm] = useState(false);
     const editFormRef = React.useRef<HTMLDivElement>(null);
-
+    
     const handleChange = useCallback((value: number) => {
         setStatus(value.toString());
         
@@ -24,7 +26,7 @@ export const TaskComp = ({ task }: Props) => {
             console.log(`Status atualizado para: ${status}`);
         }
         catch (error) {console.error(error);}
-        
+       
         console.log({id:task.id, status:value});
     },[]);
 
@@ -38,6 +40,7 @@ export const TaskComp = ({ task }: Props) => {
             } catch (error) {
                 console.error(error);
             }
+            handlerUpdate(); 
         }
     }, []);
 
@@ -59,7 +62,7 @@ export const TaskComp = ({ task }: Props) => {
             <Component.Container>
                 <Component.ButtonEdit onClick={handleClick}><EditFilled /></Component.ButtonEdit>
                 {showEditForm ?<div ref={editFormRef}> <EditForm key={task.id} task={task} /> </div>: null}
-                <Component.ButtonDelete onClick={() => handleDelete(task.id)} ><DeleteFilled /></Component.ButtonDelete>
+                <Component.ButtonDelete onClick={() => {handleDelete(task.id)}}><DeleteFilled/></Component.ButtonDelete>
             </Component.Container>
 
         </Component.Container>
