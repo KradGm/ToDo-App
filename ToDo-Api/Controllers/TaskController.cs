@@ -1,6 +1,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Models;
 namespace ToDoProject.Controllers;
@@ -26,14 +27,14 @@ public class TaskController : ControllerBase
     {
         var tasklist = _context.Tasks.ToList();
         var filterList = new List<Task>();
-        if(tasklist != null){
-        for(int i=0; i<tasklist.Count; i++){
+        if(tasklist == null){
+           return NotFound(tasklist);
+        }
+         for(int i=0; i<tasklist.Count; i++){
             if(tasklist[i].TaskName != null && tasklist[i].TaskName.Contains(name)){
                 filterList.Add(tasklist[i]);
             }
-        };
         }
-        
         return filterList;
     }
 
