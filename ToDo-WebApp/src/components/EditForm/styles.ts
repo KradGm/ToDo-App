@@ -10,7 +10,7 @@ export const Container = styled.div`
 
 export const Modal = styled.div`
     opacity: 1;
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
@@ -31,26 +31,22 @@ export const Modal = styled.div`
     justify-content: center;
     align-items: center;
     background-color:white;
-    top:
-
-    input{
-        margin-bottom:1.25rem;
-    }
+    border-radius:20px;
     label{
         color:black;
-        font-weight:800;
+        font-weight:700;
     }
     `;
-
     export const SaveButton = styled.button`
     font-size:x-large;   
     border-radius:50px;
     border:0px;
-    margin-top:1.25rem;
     transition: transform 0.3s ease;
+    background-color:rgba(0, 0, 0, 0);
+
     &:hover {
         cursor: pointer;
-        border: 1px solid red;
+        border: 1px solid blue;
         transform: scale(1.1);
       }
     `;
@@ -59,14 +55,15 @@ export const Modal = styled.div`
     font-size:x-large;   
     border: 0px;
     position: relative;
-    left: 3.8rem;
+    left: 5rem;
     bottom: 1rem;
     color:red;
-    background-color:white;
     transition: transform 0.3s ease;
+    background-color:rgba(0, 0, 0, 0);
     &:hover {
         cursor: pointer;
-        border: 1px solid red;
+        border: 2px solid red;
+        border-radius:50px;
         transform: scale(1.1);
       }
     `;

@@ -10,9 +10,10 @@ export const Container = styled.div`
     align-items:center;
     justify-content:space-between;
     label{
-        color: #CCC;
-
+        color: #189AB4;
+        margin-left:0.5rem;
         margin-right:10px;
+        font-weight:800;
     }
     p{
         color: #ffffff

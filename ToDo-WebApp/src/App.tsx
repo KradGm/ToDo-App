@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import './App.css'
 import * as Components from './App.styles';
 import { Task } from './Model/Task';
@@ -11,7 +11,9 @@ import { InputComp } from './components/Input';
 const App = () => {
   
   const [list, setList] = useState<Task[]>([]);
-
+  const AnotherCOmp = (props: { doIt: MouseEventHandler<HTMLButtonElement> | undefined; }) =>{
+    return <button onClick={props.doIt}>Hello</button>
+  }
   const fetchTaskList = useCallback(async()=>{
     try{
     const response =  await api
@@ -25,8 +27,7 @@ const App = () => {
 
   useEffect(()=>{
     fetchTaskList()
-    console.log(list)
-  },[ fetchTaskList])
+  },[fetchTaskList])
 
   return (
     <Components.Container>
@@ -37,11 +38,12 @@ const App = () => {
         <InputComp setGlobalList={setList} />
               <AddTask/>
         {list.map(task=>(
-            <TaskComp key={task.id} task={task}></TaskComp>
+            <TaskComp key={task.id} task={task}/>
           )
           )
         }
       </Components.Area>
+      <AnotherCOmp doIt={fetchTaskList}/>
     </Components.Container>
   )
 }

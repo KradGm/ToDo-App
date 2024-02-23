@@ -1,52 +1,57 @@
-import { FormEvent } from 'react';
 import { Task } from '../../Model/Task';
 import api from '../../services/Api';
 import * as Component from './styles';
 import { CloseOutlined, SaveTwoTone } from '@ant-design/icons';
+import {  Form, Input, Select } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 
 type Props = {
     task: Task;
 }
-export const EditForm = ({ task }: Props) =>{
+export const EditForm = ({ task }: Props) => {
+    const [form] = Form.useForm();
 
-    const handleSubmit = async(event: FormEvent<HTMLFormElement>) =>  {
-        const formData = new FormData(event.currentTarget)
-        const taskName = formData.get("taskName");
-        const description = formData.get("description");
-        const status = formData.get("status");
+    const handleSubmit = async () => {
+        const taskName = form.getFieldValue("taskName");
+        const description = form.getFieldValue("description");
+        const status = form.getFieldValue("status");
 
-        if(status){
-            status.toString();
-         } else{
-             return 'parseStatus nao existe'
-         }
- 
-         const numberStatus = parseInt(status);
-    
-        api.put(`api/tasks/${task.id}`,{id:task.id, taskName:taskName, status:numberStatus, description:description});
-        console.log({id:task.id, taskName:taskName, status:numberStatus, description:description});
+        const numberStatus = parseInt(status);
+
+        api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
+        console.log({ id: task.id, taskName: taskName, status: numberStatus, description: description });
     }
-    
-    
-    return(
-            <Component.Modal>
+
+
+    return (
+        <Component.Modal>
             <Component.EditForm onSubmit={handleSubmit}>
-            <Component.CloseButton><CloseOutlined /></Component.CloseButton>
-            <label>Nome da Tarefa:</label>
-            <input name="taskName" type="text" defaultValue={task.taskName}/>
-            <label>
-                    Status da Tarefa:
-                    <br />
-                    <select name="status" defaultValue={task.status}>
-                        <option value="0">Concluido</option>
-                        <option value="1">Não iniciado</option>
-                        <option value="2">Em andamento</option>
-                    </select>
-                </label>
-            <label>Descrição da Tarefa</label>
-            <textarea  name="description" defaultValue={task.description}/>
-            <Component.SaveButton><SaveTwoTone /></Component.SaveButton>
+                <Component.CloseButton><CloseOutlined /></Component.CloseButton>
+                <Form form={form}
+                    onFinish={handleSubmit}
+                    layout="vertical"
+                    name='basic'>
+                    <Form.Item<Task>
+                        label="Nome da Tarefa:"
+                        name="taskName"
+                        initialValue={task.taskName}>
+                        <Input required maxLength={20} />
+                    </Form.Item>
+                    <Form.Item<Task> label="Select"
+                        name="status"
+                        initialValue={task.status.toString()}>
+                        <Select>
+                            <Select.Option value="0">Concluido</Select.Option>
+                            <Select.Option value="1">Não iniciado</Select.Option>
+                            <Select.Option value="2">Em andamento</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item<Task> name="description" label="Descreva sua tarefa" initialValue={task.description}>
+                        <TextArea rows={4} maxLength={60} />
+                    </Form.Item>
+                </Form>
+                <Component.SaveButton><SaveTwoTone /></Component.SaveButton>
             </Component.EditForm>
-            </Component.Modal>
+        </Component.Modal>
     );
 }

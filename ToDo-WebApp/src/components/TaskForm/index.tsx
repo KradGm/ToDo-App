@@ -1,56 +1,64 @@
-import {  Input } from 'antd';
 import api from '../../services/Api';
 import * as Component from './styles';
-import { FormEvent } from 'react';
+import { useCallback, useEffect } from 'react';
 import TextArea from 'antd/es/input/TextArea';
+import {
+    Button,
+    Form, Input, Select
+
+
+} from 'antd';
+import { Task } from '../../Model/Task';
 
 export const TaskForm = () => {
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const [form] = Form.useForm();
+    const onFinish = useCallback( async () => {
+        const endPoint = 'api/tasks';
 
-        const formData = new FormData(event.currentTarget);
-        const taskName = formData.get("taskName");
-        let taskStatus = formData.get("status");
-        const description = formData.get("description");
-        taskStatus = taskStatus ? taskStatus.toString() : "";
-
-        try {
-            const response = await api.post('api/tasks', { taskName: taskName, status: parseInt(taskStatus), description: description });
-            const newTask = response.data;
-            console.log(newTask);
+        const taskName = form.getFieldValue('taskName');
+        const status = form.getFieldValue('status');
+        const description = form.getFieldValue('description');
+        const statusNumber = parseInt(status);
+        try {   
+            console.log(status);
+            console.log(taskName);
+            await api.post(endPoint, {taskName:taskName, status:statusNumber, description:description });
         } catch (error) {
             console.error(error);
         }
+    }, []);
+    useEffect(() => {
+    
+    }, []);
 
-
-    };
     return (
         <Component.Container>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Nome da Tarefa:
-                    <br />
-                    <Input type="text" name="taskName"  required/>
-                </label>
-                <br />
-                <label>
-                    Status da Tarefa:
-                    <br />
-                    <select name="status" required>
-                        <option value="0">Concluido</option>
-                        <option value="1">Não iniciado</option>
-                        <option value="2">Em andamento</option>
-                    </select>
-                </label>
-                <br />
-                <label>
-                    Descrição:
-                    <br />
-                    <TextArea name="description" rows={4} placeholder="O maximo de  caracteres é 20" maxLength={20} />
-                </label>
-                <br />
-                <Component.Button>Criar</Component.Button>
-            </form>
+            <Form form={form}
+                onFinish={onFinish}
+                layout="vertical"
+                name='basic'>
+                <Form.Item<Task> 
+                label="Nome da Tarefa:"
+                name="taskName" >
+                    <Input maxLength={20} required />
+                </Form.Item>
+                <Form.Item<Task> label="Select"
+                name="status">
+                    <Select>    
+                        <Select.Option value="0">Concluido</Select.Option>
+                        <Select.Option value="1">Não iniciado</Select.Option>
+                        <Select.Option value="2">Em andamento</Select.Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item<Task> name="description" label="Descreva sua tarefa">
+                    <TextArea placeholder="Descreva sua tarefa" rows={4} maxLength={60} />
+                </Form.Item>
+                <Form.Item>
+                <Button type="primary" htmlType='submit'>Submit</Button>
+                </Form.Item>
+            </Form>
+           
+             
         </Component.Container>
     );
 }
