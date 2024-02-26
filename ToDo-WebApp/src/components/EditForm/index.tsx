@@ -22,8 +22,9 @@ export const EditForm = ({ task, setShow, handlerUpdate }: Props) => {
 
         const numberStatus = parseInt(status);
 
-        api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
+        await api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
         console.log({ id: task.id, taskName: taskName, status: numberStatus, description: description });
+        handlerUpdate();
     }, [form, task.id]);
 
     return (
@@ -34,7 +35,6 @@ export const EditForm = ({ task, setShow, handlerUpdate }: Props) => {
                     form={form}
                     onFinish={()=>{handleSubmit();
                     setShow(false);
-                    handlerUpdate();
                     }}
                     layout="vertical"
                     name='basic'>
