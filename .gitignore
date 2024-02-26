@@ -61,3 +61,8 @@ x64/
 *.log
 *.svclog
 *.scc
+*.dll
+*.pdb
+*.cache
+*.cs
+*.json
