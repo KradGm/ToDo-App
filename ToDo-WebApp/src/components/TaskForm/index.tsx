@@ -1,6 +1,6 @@
 import api from '../../services/Api';
 import * as Component from './styles';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import TextArea from 'antd/es/input/TextArea';
 import {
     Button,
@@ -15,6 +15,7 @@ type Props = {
 }
 export const TaskForm = ({handlerUpdate}:Props) => {
     const [form] = Form.useForm();
+
     const onPost = useCallback( async () => {
         const endPoint = 'api/tasks';
 
@@ -23,23 +24,26 @@ export const TaskForm = ({handlerUpdate}:Props) => {
         const description = form.getFieldValue('description');
         const statusNumber = parseInt(status);
         try {   
-            console.log(status);
-            console.log(taskName);
             await api.post(endPoint, {taskName:taskName, status:statusNumber, description:description });
         } catch (error) {
             console.error(error);
+            window.alert('Já existe uma tarefa com esse Nome')
         }
         handlerUpdate();
     }, [form, handlerUpdate]);
-    useEffect(() => {
-    
+
+    const resetForm = useCallback(()=>{
+        form.setFieldValue('taskName', '');
+        form.setFieldValue('status', '');
+        form.setFieldValue('description', '');
+
     }, []);
 
     return (
         <Component.Container>
             <Form 
                 form={form}
-                onFinish={onPost}
+                onFinish={()=>{onPost(); resetForm()}}
                 layout="vertical"
                 name='basic'>
                 <Form.Item<Task> 
@@ -49,7 +53,7 @@ export const TaskForm = ({handlerUpdate}:Props) => {
                 </Form.Item>
                 <Form.Item<Task> label="Select"
                 name="status">
-                    <Select placeholder='Selecione o estado da tarefa'>    
+                    <Select className='test'>    
                         <Select.Option value="0">Concluido</Select.Option>
                         <Select.Option value="1">Não iniciado</Select.Option>
                         <Select.Option value="2">Em andamento</Select.Option>

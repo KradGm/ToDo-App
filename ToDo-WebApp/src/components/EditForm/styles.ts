@@ -4,8 +4,6 @@ export const Container = styled.div`
     position: relative;
     color: red;
     background-color: white;
-
-
 `;
 
 export const Modal = styled.div`
@@ -19,7 +17,7 @@ export const Modal = styled.div`
     align-items: center;
     justify-content: center;
     background: rgba(77, 77, 77, 0.5);
-    transition: all 0.4s;
+    z-index:1;
     `;
     
     export const EditForm = styled.div`

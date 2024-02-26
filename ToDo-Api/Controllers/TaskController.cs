@@ -44,6 +44,7 @@ public class TaskController : ControllerBase
         
         if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == newTask.TaskName))
           throw new Exception("Registro duplicado");
+          
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();  
         return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
@@ -65,8 +66,10 @@ public class TaskController : ControllerBase
         }
 
         _context.Entry(task).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
+        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == task.TaskName))
+          throw new Exception("Registro duplicado");
         try{
+            
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException){

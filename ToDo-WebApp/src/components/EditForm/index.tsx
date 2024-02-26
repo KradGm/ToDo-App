@@ -21,9 +21,12 @@ export const EditForm = ({ task, setShow, handlerUpdate }: Props) => {
         const status = form.getFieldValue("status");
 
         const numberStatus = parseInt(status);
-
-        await api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
-        console.log({ id: task.id, taskName: taskName, status: numberStatus, description: description });
+        try{
+            await api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
+        }catch(error:any){
+                console.error(error.response.data);
+                alert('Já existe uma tarefa com esse nome');
+        }
         handlerUpdate();
     }, [form, task.id]);
 
