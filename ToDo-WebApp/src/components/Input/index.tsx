@@ -22,7 +22,7 @@ export const InputComp:React.FC<InputCompProps> = ({ setGlobalList }) => {
       }catch(error){
         console.error(error);
       }
-      }, [list]);
+      }, [list, setGlobalList]);
       
 
     return (

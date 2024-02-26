@@ -1,17 +1,21 @@
+import { useCallback } from 'react';
 import { Task } from '../../Model/Task';
 import api from '../../services/Api';
 import * as Component from './styles';
 import { CloseOutlined, SaveTwoTone } from '@ant-design/icons';
-import {  Form, Input, Select } from 'antd';
+import {  Button, Form, Input, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
 type Props = {
     task: Task;
+    setShow: (boolean: boolean) => void;
+    handlerUpdate: ()=> void;
 }
-export const EditForm = ({ task }: Props) => {
+
+export const EditForm = ({ task, setShow, handlerUpdate }: Props) => {
     const [form] = Form.useForm();
 
-    const handleSubmit = async () => {
+    const handleSubmit = useCallback( async () => {
         const taskName = form.getFieldValue("taskName");
         const description = form.getFieldValue("description");
         const status = form.getFieldValue("status");
@@ -20,15 +24,18 @@ export const EditForm = ({ task }: Props) => {
 
         api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
         console.log({ id: task.id, taskName: taskName, status: numberStatus, description: description });
-    }
-
+    }, [form, task.id]);
 
     return (
         <Component.Modal>
-            <Component.EditForm onSubmit={handleSubmit}>
-                <Component.CloseButton ><CloseOutlined /></Component.CloseButton>
-                <Form form={form}
-                    onFinish={handleSubmit}
+            <Component.EditForm>
+                <Component.CloseButton onClick={()=> setShow(false)} ><CloseOutlined /></Component.CloseButton>
+                <Form
+                    form={form}
+                    onFinish={()=>{handleSubmit();
+                    setShow(false);
+                    handlerUpdate();
+                    }}
                     layout="vertical"
                     name='basic'>
                     <Form.Item<Task>
@@ -49,8 +56,12 @@ export const EditForm = ({ task }: Props) => {
                     <Form.Item<Task> name="description" label="Descreva sua tarefa" initialValue={task.description}>
                         <TextArea rows={4} maxLength={60} />
                     </Form.Item>
-                </Form>
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Button htmlType="submit">
                 <Component.SaveButton><SaveTwoTone /></Component.SaveButton>
+                 </Button>
+                </Form.Item>
+                </Form >
             </Component.EditForm>
         </Component.Modal>
     );

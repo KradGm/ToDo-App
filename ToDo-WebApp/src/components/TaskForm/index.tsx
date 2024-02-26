@@ -15,7 +15,7 @@ type Props = {
 }
 export const TaskForm = ({handlerUpdate}:Props) => {
     const [form] = Form.useForm();
-    const onFinish = useCallback( async () => {
+    const onPost = useCallback( async () => {
         const endPoint = 'api/tasks';
 
         const taskName = form.getFieldValue('taskName');
@@ -30,7 +30,7 @@ export const TaskForm = ({handlerUpdate}:Props) => {
             console.error(error);
         }
         handlerUpdate();
-    }, []);
+    }, [form, handlerUpdate]);
     useEffect(() => {
     
     }, []);
@@ -39,7 +39,7 @@ export const TaskForm = ({handlerUpdate}:Props) => {
         <Component.Container>
             <Form 
                 form={form}
-                onFinish={onFinish}
+                onFinish={onPost}
                 layout="vertical"
                 name='basic'>
                 <Form.Item<Task> 

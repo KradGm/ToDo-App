@@ -22,7 +22,7 @@ export const Modal = styled.div`
     transition: all 0.4s;
     `;
     
-    export const EditForm = styled.form`
+    export const EditForm = styled.div`
     padding: 1.1rem;
     display: flex;
     justify-items: center;
@@ -32,21 +32,23 @@ export const Modal = styled.div`
     align-items: center;
     background-color:white;
     border-radius:20px;
+    button{
+      padding:0px;
+    }
     label{
         color:black;
         font-weight:700;
     }
     `;
-    export const SaveButton = styled.button`
+    export const SaveButton = styled.div`
     font-size:x-large;   
     border-radius:50px;
     border:0px;
     transition: transform 0.3s ease;
     background-color:rgba(0, 0, 0, 0);
-
+    padding:0;
     &:hover {
         cursor: pointer;
-        border: 1px solid blue;
         transform: scale(1.1);
       }
     `;

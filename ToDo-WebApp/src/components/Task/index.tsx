@@ -3,21 +3,19 @@ import { Task } from '../../Model/Task';
 import api from '../../services/Api';
 import {  useCallback, useState } from 'react';
 import { EditForm } from '../EditForm';
-import React from 'react';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { Select } from 'antd';
 
 
 type Props = {
     task: Task;
-    handlerUpdate: ()=> void
+    handlerUpdate: ()=> void;
 }
 
-export const TaskComp = ({ task, handlerUpdate }: Props) => {
+export const TaskComp = ({ task, handlerUpdate  }: Props) => {
     const [status, setStatus] = useState(task.status.toString());
     const [showEditForm, setShowEditForm] = useState(false);
-    const editFormRef = React.useRef<HTMLDivElement>(null);
-    
+
     const handleChange = useCallback((value: number) => {
         setStatus(value.toString());
         
@@ -28,7 +26,7 @@ export const TaskComp = ({ task, handlerUpdate }: Props) => {
         catch (error) {console.error(error);}
        
         console.log({id:task.id, status:value});
-    },[]);
+    },[status, task.id, task.taskName]);
 
     const handleDelete = useCallback(async (taskid: number) => {
         const confirmAct = window.confirm("Você tem certeza disso?");
@@ -40,12 +38,11 @@ export const TaskComp = ({ task, handlerUpdate }: Props) => {
             } catch (error) {
                 console.error(error);
             }
-            handlerUpdate(); 
+            handlerUpdate();
         }
-    }, []);
+    }, [handlerUpdate]);
 
     const handleClick = useCallback(() => {
-        
         setShowEditForm(true);
     }, []);
 
@@ -62,7 +59,7 @@ export const TaskComp = ({ task, handlerUpdate }: Props) => {
             </Component.Container>
             <Component.Container>
                 <Component.ButtonEdit onClick={handleClick}><EditFilled /></Component.ButtonEdit>
-                {showEditForm ?<div ref={editFormRef}> <EditForm key={task.id} task={task} /> </div>: null}
+                {showEditForm ?<EditForm handlerUpdate={handlerUpdate} setShow={setShowEditForm} key={task.id} task={task} />:null}
                 <Component.ButtonDelete onClick={() => {handleDelete(task.id)}}><DeleteFilled/></Component.ButtonDelete>
             </Component.Container>
 
