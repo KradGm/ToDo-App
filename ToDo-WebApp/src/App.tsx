@@ -1,26 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
 import './App.css'
 import * as Components from './App.styles';
-import { Task } from './Model/Task';
+import { Task } from './model/Task';
 import {TaskComp} from './components/Task';
-import api from './services/Api';
 import {AddTask} from './components/AddTask';
 import { InputComp } from './components/Input';
+import { AlertComp } from './components/Alert';
+import { onGetAllTasks } from './services/Api';
 
 
-const App = () => {
+type Props={
+  error:boolean;
+}
+
+const App = ({error}:Props) => {
   
   const [list, setList] = useState<Task[]>([]);
   
   const fetchTaskList = useCallback(async()=>{
     try{
-    const response =  await api
-      .get("api/task-list");
-     
-    setList(response.data) 
-  }catch(error){
+      setList(await onGetAllTasks());
+    }catch(error){
     console.error(error);
-  }
+    }
   }, []);
 
   useEffect(()=>{
@@ -30,13 +32,14 @@ const App = () => {
   return (
     <Components.Container>
       <Components.Area>
+        {error &&<AlertComp />}
         <Components.Header>
           LISTA DE TAREFAS
         </Components.Header>
         <InputComp setGlobalList={setList} />
               <AddTask handlerUpdate={fetchTaskList}/>
         {list.map(task=>(
-            <TaskComp handlerUpdate={fetchTaskList} key={task.id} task={task} />
+            <TaskComp  handlerUpdate={fetchTaskList} key={task.id} task={task} error={error} />
           )
           )
         }
