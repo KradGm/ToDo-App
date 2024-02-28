@@ -42,9 +42,10 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<Task>> PostTask(Task newTask)
     {
         
-        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == newTask.TaskName))
-          throw new Exception("Registro duplicado");
-          
+        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == newTask.TaskName)){
+          //throw new Exception("Registro duplicado");
+          throw new ArgumentException("testError");
+          }
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();  
         return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);

@@ -18,6 +18,7 @@ export const onPost = async (data: Task) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

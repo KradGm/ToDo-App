@@ -1,6 +1,12 @@
-import { Alert } from "antd";
+import { Alert, AlertProps } from "antd";
 
 
-export const AlertComp = () => {
-  return <Alert message="error" type="error" />;
+type Props = {
+ setError:(bool:boolean)=>void;
+ message:(string);
+ type:(AlertProps["type"]);
+};
+
+export const AlertComp:React.FC<Props> = ({setError,message,type}) => {
+  return <Alert message={message} type={type} showIcon closable onClose={()=>setError(false)}  />;
 };

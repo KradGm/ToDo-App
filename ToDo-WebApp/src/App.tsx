@@ -12,9 +12,13 @@ import {
   onPatch,
   onPost,
 } from "./services/Api";
+import { AlertComp } from "./components/Alert";
 
 const App = () => {
   const [list, setList] = useState<Task[]>([]);
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [editSucces, setEditSuccess] = useState(false);
 
   const fetchTaskList = useCallback(async () => {
     try {
@@ -34,10 +38,12 @@ const App = () => {
 
   const onRequestPost = useCallback(async (data: Task) => {
     try {
-      const newTask = await onPost(data);
-      setList((prevList) => [...prevList, newTask]);
+      await onPost(data);
+      fetchTaskList();
+      setSuccess(true);
     } catch (error) {
-      console.error(error);
+      setError(true);
+      
     }
   }, []);
 
@@ -45,6 +51,7 @@ const App = () => {
     try {
       await onPatch(data);
       setList(await onGetAllTasks());
+      setEditSuccess(true);
     } catch (error) {
       console.error(error);
     }
@@ -56,6 +63,7 @@ const App = () => {
       setList(await onGetAllTasks());
     } catch (error) {
       console.error(error);
+      setError(true);
     }
   }, []);
 
@@ -66,7 +74,27 @@ const App = () => {
   return (
     <Components.Container>
       <Components.Area>
-  
+      {error && (
+          <AlertComp
+            message="Ja existe uma tarefa com esse nome"
+            setError={setError}
+            type="error"
+          />
+        )}
+        {success && (
+          <AlertComp 
+            message="Tarefa postada com sucesso" 
+            setError={setSuccess}
+            type="success"
+          />
+        )}
+        {editSucces && (
+          <AlertComp 
+            message="Tarefa atualizada com sucesso" 
+            setError={setEditSuccess}
+            type="success"
+          />
+        )}
         <Components.Header>LISTA DE TAREFAS</Components.Header>
         <InputComp onRequestGetByName={onRequestGetByName} />
         <AddTask
