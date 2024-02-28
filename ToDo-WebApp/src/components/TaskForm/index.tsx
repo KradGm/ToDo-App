@@ -54,7 +54,7 @@ export const TaskForm: React.FC<Props> = ({
           <Input placeholder="Nome da tarefa" maxLength={20} required />
         </Form.Item>
         <Form.Item<Task> label="Select" name="status">
-        <Select options={[{ value:0, label: <Component.Concluido>Concluido</Component.Concluido> },{ value:1, label: <span>Não Iniciado</span> },{ value:2, label: <span>Em Andamento</span> }]}/>
+        <Select options={[{ value:0, label:<span>Concluido</span> },{ value:1, label: <span>Não Iniciado</span> },{ value:2, label: <span>Em Andamento</span> }]}/>
         </Form.Item>
         <Form.Item<Task> name="description" label="Descreva sua tarefa">
           <TextArea placeholder="Descreva sua tarefa" rows={4} maxLength={60} />
@@ -68,7 +68,6 @@ export const TaskForm: React.FC<Props> = ({
         >
           {isEdit ? (
             <Component.ButtonA htmlType="submit">
-              {" "}
               <SaveTwoTone />
             </Component.ButtonA>
           ) : (
