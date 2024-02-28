@@ -8,30 +8,28 @@ import { Select } from "antd";
 
 type Props = {
   task: Task;
-  handlerUpdate: () => void;
   error:boolean;
+  onRequestPatch: (data:Task)=>void;
+  onRequestPost:(data:Task)=>void;
 };
 
-export const TaskComp = ({ task, handlerUpdate, error }: Props) => {
-  const [status, setStatus] = useState(task.status.toString());
-  const [showEditForm, setShowEditForm] = useState(false);
+export const TaskComp:React.FC<Props> = ({ task, error, onRequestPatch,onRequestPost }) => {
+  const [show,setShowEditForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
   const handleChange = useCallback(
-    async (value: number) => {
-      setStatus(value.toString());
-      try {
-        await api.put(`api/tasks/${task.id}`, {
-          id: task.id,
-          taskName: task.taskName,
-          status: value,
-        });
-        console.log(`Status atualizado para: ${status}`);
-      } catch (error) {
-        console.error(error);
+    async (value:any) => {
+      console.log(value);
+      try{
+          onRequestPatch({id:task.id, taskName:task.taskName, status:value, description:task.description});
+      }catch(error){
+        console.log(error)
       }
-      console.log({ id: task.id, status: value });
     },
-    [status, task.id, task.taskName]
+    []
   );
 
   const handleDelete = useCallback(
@@ -43,15 +41,16 @@ export const TaskComp = ({ task, handlerUpdate, error }: Props) => {
         } catch (error) {
           console.error(error);
         }
-        handlerUpdate();
       }
     },
-    [handlerUpdate]
+    []
   );
 
   const handleClick = useCallback(() => {
-    setShowEditForm(true);
-  }, []);
+    console.log("abrir modal");
+showModal();
+console.log(isModalOpen);
+}, []);
 
   return (
     <Component.Container>
@@ -68,13 +67,16 @@ export const TaskComp = ({ task, handlerUpdate, error }: Props) => {
         <Component.ButtonEdit onClick={handleClick}>
           <EditFilled />
         </Component.ButtonEdit>
-        {showEditForm ? (
+        {isModalOpen ? (
           <EditForm
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
             showError={error}
-            handlerUpdate={handlerUpdate}
             setShow={setShowEditForm}
             key={task.id}
             task={task}
+            onRequestPatch={onRequestPatch}
+            onRequestPost={onRequestPost}
           />
         ) : null}
         <Component.ButtonDelete

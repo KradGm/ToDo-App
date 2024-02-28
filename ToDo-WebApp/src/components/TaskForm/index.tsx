@@ -1,38 +1,41 @@
 import * as Component from "./styles";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Button, Form, Input, Select } from "antd";
+import { SaveTwoTone } from "@ant-design/icons";
 import { Task } from "../../model/Task";
-import { onPost } from "../../services/Api";
 
 type Props = {
-  handlerUpdate: () => void;
   task?: Task;
+  onRequestPost: (data: Task) => void;
+  onRequestPatch: (data:Task)=>void;
 };
-export const TaskForm: React.FC<Props> = ({ handlerUpdate, task }) => {
+export const TaskForm: React.FC<Props> = ({ task, onRequestPost, onRequestPatch }) => {
   const [form] = Form.useForm();
+  const [isEdit, setIsEdit] = useState(Boolean);
 
-  const onRequestPost = useCallback(async (data: Task) => {
-    try {
-      onPost(data);
-    } catch (error) {
-      console.error(error);
-      window.alert("Já existe uma tarefa com esse Nome");
-    }
-    handlerUpdate();
-  }, [handlerUpdate]);
 
-  const onFinish = useCallback(async (data:Task)=>{
-    console.log(data);
-    onRequestPost(data);
+  const onFinish = useCallback(async (values:any)=>{
+    console.log(values.status);
+    if(task !=null){
+       onRequestPatch({id:task.id, status:values.status, taskName:values.taskName, description:values.description});
+    } else{
+    onRequestPost(form.getFieldsValue());
     form.resetFields();
+  }
   }, [])
 
   useEffect(() => {
-    if (task) {
+    if(!task) {
+      setIsEdit(true);
+      console.log('task não existe')
+    }else{
+      setIsEdit(false);
+      console.log('task existe');
       form.setFieldsValue(task);
     }
   }, []);
+  
 
   return (
     <Component.Container>
@@ -50,12 +53,12 @@ export const TaskForm: React.FC<Props> = ({ handlerUpdate, task }) => {
         <Form.Item<Task> name="description" label="Descreva sua tarefa">
           <TextArea placeholder="Descreva sua tarefa" rows={4} maxLength={60} />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+        <Form.Item style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+         
+            {isEdit ? <Button type="primary" htmlType="submit">Enviar</Button> : <Component.ButtonA htmlType="submit" > <SaveTwoTone /></Component.ButtonA>}
+            
         </Form.Item>
       </Form>
-    </Component.Container>
+      </Component.Container>
   );
 };

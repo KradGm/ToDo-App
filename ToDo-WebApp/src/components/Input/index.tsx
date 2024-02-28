@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import api from "../../services/Api";
 import * as Component from "./styles";
-import { Task } from "../../model/Task";
+import { Task } from "../../Model/Task";
 import Search from "antd/es/input/Search";
 
 interface InputCompProps {

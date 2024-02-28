@@ -1,16 +1,33 @@
 import { PlusCircleFilled } from "@ant-design/icons";
 import { TaskForm } from "../TaskForm";
 import * as Component from "./styles";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Task } from "../../model/Task";
+import { Modal } from "antd";
 type Props = {
-  handlerUpdate: () => void;
+  onRequestPost: (data:Task)=>void;
+  onRequestPatch: (data:Task)=>void;
+  task?:Task;
 };
 
-export const AddTask = ({ handlerUpdate }: Props) => {
+export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) => {
   const [showForm, setShowForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
     setShowForm(!showForm);
+    showModal();
+  };
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -18,7 +35,7 @@ export const AddTask = ({ handlerUpdate }: Props) => {
       <Component.Button onClick={handleClick}>
         <PlusCircleFilled />
       </Component.Button>
-      {showForm && <TaskForm handlerUpdate={handlerUpdate}/>}
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}><TaskForm task={task} onRequestPatch={onRequestPatch} onRequestPost={onRequestPost}/></Modal> 
     </Component.Container>
   );
 };
