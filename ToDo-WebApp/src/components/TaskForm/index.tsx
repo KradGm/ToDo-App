@@ -11,18 +11,35 @@ type Props = {
   task?: Task;
   onRequestPost: (data: Task) => void;
   onRequestPatch: (data: Task) => void;
+  handleOk:()=>void;
 };
 
 export const TaskForm: React.FC<Props> = ({
   task,
   onRequestPost,
   onRequestPatch,
+  handleOk
 }) => {
   const [form] = Form.useForm();
   const [isEdit, setIsEdit] = useState(Boolean);
+  const [selectedStatus, setSelectedStatus] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (task) {
+      setIsEdit(true);
+      console.log("task existe");
+      form.setFieldsValue(task);
+      setSelectedStatus(task.status);
+    } else {
+      setIsEdit(false);
+      console.log(isEdit);
+      console.log("task não existe");
+      form.resetFields();
+    }
+  }, [task, form]);
 
   const onFinish = useCallback(async (values: any) => {
-    if (task != null) {
+    if (isEdit && task) {
       onRequestPatch({
         id: task.id,
         status: values.status,
@@ -31,22 +48,13 @@ export const TaskForm: React.FC<Props> = ({
       });
       console.log(`Status atualizado para: ${values.status}`);
     } else {
-      onRequestPost(form.getFieldsValue());
+      onRequestPost(values);
       form.resetFields();
     }
-  }, []);
+    handleOk();
+  }, [isEdit, task, onRequestPatch, onRequestPost, form, handleOk]);
+  
 
-  useEffect(() => {
-    if (!task) {
-      console.log("task não existe");
-      setIsEdit(false);
-      console.log(isEdit);
-    } else {
-      setIsEdit(true);
-      console.log("task existe");
-      form.setFieldsValue(task);
-    }
-  }, []);
 
   return (
     <Component.Container>
@@ -62,6 +70,7 @@ export const TaskForm: React.FC<Props> = ({
         </Form.Item>
         <Form.Item<Task> label="Select" name="status">
           <Select
+          value={selectedStatus}
             options={[
               { value: 0, label: <span>Concluido</span> },
               { value: 1, label: <span>Não Iniciado</span> },

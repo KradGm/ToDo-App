@@ -18,12 +18,10 @@ export const TaskComp: React.FC<Props> = ({
   task,
   onRequestPatch,
   onRequestPost,
-  onRequestDelete,
-  
+  onRequestDelete
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(task.status); 
-
+  const [taskStatus, setTaskStatus] = useState(task.status);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -42,7 +40,7 @@ export const TaskComp: React.FC<Props> = ({
     } catch (error) {
       console.log(error);
     }
-  }, [taskStatus]);
+  }, []);
 
   const handleDelete = useCallback(async (taskid: number) => {
     const confirmAct = window.confirm("Você tem certeza disso?");
@@ -61,11 +59,13 @@ export const TaskComp: React.FC<Props> = ({
     showModal();
     console.log(isModalOpen);
   }, []);
+  const handleStatusChange = (status: number) => {
+    setTaskStatus(status);
+  };
 
   useEffect(()=>{
-    setTaskStatus(task.status);
-    console.log(taskStatus);
-  },[setTaskStatus]);
+    setTaskStatus(taskStatus);
+  },[taskStatus]);
 
   return (
     <Component.Container>

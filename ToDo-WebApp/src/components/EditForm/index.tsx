@@ -12,6 +12,7 @@ type Props = {
   onRequestPost: (data: Task) => void;
   isModalOpen: boolean;
   setIsModalOpen: (boolean: boolean) => void;
+  onStatusChange?: (status: number) => void;
 };
 
 export const EditForm: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const EditForm: React.FC<Props> = ({
   onRequestPost,
   isModalOpen,
   setIsModalOpen,
+  onStatusChange
 }) => {
   const handleOk = () => {
     setIsModalOpen(false);
@@ -47,9 +49,11 @@ export const EditForm: React.FC<Props> = ({
           ]}
         >
           <TaskForm
+            handleOk={handleOk}
             task={task}
             onRequestPatch={onRequestPatch}
             onRequestPost={onRequestPost}
+            onStatusChange={onStatusChange}
           />
         </Modal>
       </Component.EditForm>

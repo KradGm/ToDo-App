@@ -58,7 +58,7 @@ const App = () => {
       setList(await onGetAllTasks());
       setEditSuccess(true);
     } catch (error) {
-      console.error(error);
+      setError(true);
     }
   }, []);
 

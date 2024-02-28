@@ -54,6 +54,7 @@ export const onPatch = async (data: Task) => {
     });
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

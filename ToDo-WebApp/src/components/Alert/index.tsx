@@ -8,5 +8,5 @@ type Props = {
 };
 
 export const AlertComp:React.FC<Props> = ({setError,message,type}) => {
-  return <Alert message={message} type={type} showIcon closable onClose={()=>setError(false)}  />;
+  return <Alert message={message} type={type} showIcon closable onClose={()=>setError(false)} />;
 };

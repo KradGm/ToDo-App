@@ -54,6 +54,7 @@ export const AddTask: React.FC<Props> = ({
         ]}
       >
         <TaskForm
+          handleOk={handleOk}
           task={task}
           onRequestPatch={onRequestPatch}
           onRequestPost={onRequestPost}
