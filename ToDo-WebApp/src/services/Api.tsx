@@ -4,11 +4,14 @@ import { Task } from "../model/Task";
 const endPointGetAll = "api/task-list";
 const endPointPost = "api/tasks";
 const endPointPatch = "api/tasks/";
+const endPointDelete = "/api/tasks/";
+const endPointGetByName="api/task-list/";
 
 const api = axios.create({
   baseURL: "http://localhost:5287/",
 });
 
+//post
 export const onPost = async (data: Task) => {
   try {
     const response = await api.post(endPointPost, data);
@@ -18,6 +21,19 @@ export const onPost = async (data: Task) => {
   }
 };
 
+//getByName
+export const onGetByNameList = (
+  async (name: string) => {
+    try {
+      const response = await api.get(`${endPointGetByName}${name}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  });
+
+//getAll
 export const onGetAllTasks = async () => {
   try {
     const response = await api.get(endPointGetAll);
@@ -26,8 +42,8 @@ export const onGetAllTasks = async () => {
     console.error(error);
   }
 };
-//patch
 
+//patch
 export const onPatch = async (data: Task) => {
   try {
     await api.patch<Task>(`${endPointPatch}${data.id}`, {
@@ -36,7 +52,7 @@ export const onPatch = async (data: Task) => {
       status: data.status,
       description: data.description,
     });
-    console.log(`Status atualizado para: ${data.id}`);
+    
   } catch (error) {
     console.error(error);
   }
@@ -44,14 +60,11 @@ export const onPatch = async (data: Task) => {
 
 //delete
 export const onDelete = async (taskid: number) => {
-  const confirmAct = window.confirm("Você tem certeza disso?");
-  if (confirmAct) {
     try {
-      await api.delete(`/api/tasks/${taskid}`);
+      await api.delete(`${endPointDelete}${taskid}`);
     } catch (error) {
       console.error(error);
     }
-  }
 };
 
 export default api;

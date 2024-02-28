@@ -1,34 +1,28 @@
-import { useCallback, useState } from "react";
-import api from "../../services/Api";
+import { useCallback } from "react";
 import * as Component from "./styles";
-import { Task } from "../../Model/Task";
 import Search from "antd/es/input/Search";
 
 interface InputCompProps {
-  setGlobalList: (list: Task[]) => void;
+  onRequestGetByName: (name: string) => void;
 }
 
-export const InputComp: React.FC<InputCompProps> = ({ setGlobalList }) => {
-  const [list, setList] = useState<Task[]>([]);
+export const InputComp: React.FC<InputCompProps> = ({
+  onRequestGetByName,
+}) => {
 
-  const fetchByNameList = useCallback(
-    async (name: string) => {
-      try {
-        const response = await api.get(`api/task-list/${name}`);
+  const onSearch = useCallback(async (name: string) => {
+    try {
+      onRequestGetByName(name);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
-        setList(response.data);
-        setGlobalList(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [list]
-  );
   return (
     <Component.Container>
       <Search
         placeholder="Insira o nome da tarefa"
-        onSearch={fetchByNameList}
+        onSearch={onSearch}
         enterButton
       />
     </Component.Container>

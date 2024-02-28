@@ -3,7 +3,7 @@ import { TaskForm } from "../TaskForm";
 import * as Component from "./styles";
 import React, { useState } from "react";
 import { Task } from "../../model/Task";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 type Props = {
   onRequestPost: (data:Task)=>void;
   onRequestPatch: (data:Task)=>void;
@@ -18,6 +18,7 @@ export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) 
     setShowForm(!showForm);
     showModal();
   };
+  
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -35,7 +36,10 @@ export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) 
       <Component.Button onClick={handleClick}>
         <PlusCircleFilled />
       </Component.Button>
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}><TaskForm task={task} onRequestPatch={onRequestPatch} onRequestPost={onRequestPost}/></Modal> 
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancelar
+          </Button>]}><TaskForm task={task} onRequestPatch={onRequestPatch} onRequestPost={onRequestPost}/></Modal> 
     </Component.Container>
   );
 };

@@ -1,65 +1,74 @@
 import * as Component from "./styles";
 import { Task } from "../../model/Task";
-import api from "../../services/Api";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EditForm } from "../EditForm";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Select } from "antd";
 
 type Props = {
   task: Task;
-  error:boolean;
-  onRequestPatch: (data:Task)=>void;
-  onRequestPost:(data:Task)=>void;
+  onRequestPatch: (data: Task) => void;
+  onRequestPost: (data: Task) => void;
+  onRequestDelete: (id: number) => void;
 };
 
-export const TaskComp:React.FC<Props> = ({ task, error, onRequestPatch,onRequestPost }) => {
-  const [show,setShowEditForm] = useState(false);
+export const TaskComp: React.FC<Props> = ({
+  task,
+  onRequestPatch,
+  onRequestPost,
+  onRequestDelete,
+  
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskStatus, setTaskStatus] = useState(task.status); 
 
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const handleChange = useCallback(
-    async (value:any) => {
-      console.log(value);
-      try{
-          onRequestPatch({id:task.id, taskName:task.taskName, status:value, description:task.description});
-      }catch(error){
-        console.log(error)
-      }
-    },
-    []
-  );
 
-  const handleDelete = useCallback(
-    async (taskid: number) => {
-      const confirmAct = window.confirm("Você tem certeza disso?");
-      if (confirmAct) {
-        try {
-          await api.delete(`/api/tasks/${taskid}`);
-        } catch (error) {
-          console.error(error);
-        }
+  const handleChange = useCallback(async (value: any) => {
+    console.log(value);
+    try {
+      onRequestPatch({
+        id: task.id,
+        taskName: task.taskName,
+        status: value,
+        description: task.description,
+      });
+      setTaskStatus(value);
+      console.log(`Status atualizado para: ${value}`);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [taskStatus]);
+
+  const handleDelete = useCallback(async (taskid: number) => {
+    const confirmAct = window.confirm("Você tem certeza disso?");
+    if (confirmAct) {
+      try {
+        onRequestDelete(taskid);
+        console.log(`A tarefa de Id:${taskid} foi removida`);
+      } catch (error) {
+        console.error(error);
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   const handleClick = useCallback(() => {
-    console.log("abrir modal");
-showModal();
-console.log(isModalOpen);
-}, []);
+    console.log("Abrir modal");
+    showModal();
+    console.log(isModalOpen);
+  }, []);
+
+  useEffect(()=>{
+    setTaskStatus(task.status);
+    console.log(taskStatus);
+  },[setTaskStatus]);
 
   return (
     <Component.Container>
       <Component.Container>
-        <Select defaultValue={task.status} onChange={handleChange}>
-          <Select.Option value={0}>Concluido</Select.Option>
-          <Select.Option value={1}>Não iniciado</Select.Option>
-          <Select.Option value={2}>Em andamento</Select.Option>
-        </Select>
+      <Select defaultValue={taskStatus} onChange={handleChange} options={[{ value:0, label: <span>Concluido</span> },{ value:1, label: <span>Não Iniciado</span> },{ value:2, label: <span>Em Andamento</span> }]}/>
         <label>{task.taskName}</label>
         <p>{task.description}</p>
       </Component.Container>
@@ -71,8 +80,6 @@ console.log(isModalOpen);
           <EditForm
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
-            showError={error}
-            setShow={setShowEditForm}
             key={task.id}
             task={task}
             onRequestPatch={onRequestPatch}

@@ -24,18 +24,30 @@ export const SaveButton = styled.div`
   }
 `;
 export const ButtonA = styled(Button)`
-    font-size: x-large;
-    border-radius: 50px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    &:hover {
-        cursor: pointer;
-        border: 1px solid red;
-        transform: scale(1.1);
-    }
-    .anticon.anticon-save{
-      margin:0px;
-    }
+  font-size: x-large;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid red;
+    transform: scale(1.1);
+  }
+  .anticon.anticon-save {
+    margin: 0px;
+  }
+`;
+
+export const FormTitle = styled.h1`
+  background-image: linear-gradient(to left, #05445e, #189ab4);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+`;
+
+export const Concluido = styled.span`
+color:green;
+
 `;
