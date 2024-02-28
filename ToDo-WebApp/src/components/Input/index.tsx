@@ -1,4 +1,6 @@
 import { useCallback } from "react";
+
+//Styles
 import * as Component from "./styles";
 import Search from "antd/es/input/Search";
 
@@ -6,10 +8,7 @@ interface InputCompProps {
   onRequestGetByName: (name: string) => void;
 }
 
-export const InputComp: React.FC<InputCompProps> = ({
-  onRequestGetByName,
-}) => {
-
+export const InputComp: React.FC<InputCompProps> = ({ onRequestGetByName }) => {
   const onSearch = useCallback(async (name: string) => {
     try {
       onRequestGetByName(name);

@@ -1,7 +1,9 @@
-import * as Component from "./styles";
 import { Task } from "../../model/Task";
 import { useCallback, useEffect, useState } from "react";
 import { EditForm } from "../EditForm";
+
+//Styles
+import * as Component from "./styles";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Select } from "antd";
 

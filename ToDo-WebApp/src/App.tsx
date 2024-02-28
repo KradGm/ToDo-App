@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import "./App.css";
-import * as Components from "./App.styles";
+
+//Componentes
 import { Task } from "./model/Task";
 import { TaskComp } from "./components/Task";
 import { AddTask } from "./components/AddTask";
 import { InputComp } from "./components/Input";
+import { AlertComp } from "./components/Alert";
+
+//Services
 import {
   onDelete,
   onGetAllTasks,
@@ -12,7 +15,10 @@ import {
   onPatch,
   onPost,
 } from "./services/Api";
-import { AlertComp } from "./components/Alert";
+
+//Styles
+import "./App.css";
+import * as Components from "./App.styles";
 
 const App = () => {
   const [list, setList] = useState<Task[]>([]);
@@ -43,7 +49,6 @@ const App = () => {
       setSuccess(true);
     } catch (error) {
       setError(true);
-      
     }
   }, []);
 
@@ -74,7 +79,7 @@ const App = () => {
   return (
     <Components.Container>
       <Components.Area>
-      {error && (
+        {error && (
           <AlertComp
             message="Ja existe uma tarefa com esse nome"
             setError={setError}
@@ -82,15 +87,15 @@ const App = () => {
           />
         )}
         {success && (
-          <AlertComp 
-            message="Tarefa postada com sucesso" 
+          <AlertComp
+            message="Tarefa postada com sucesso"
             setError={setSuccess}
             type="success"
           />
         )}
         {editSucces && (
-          <AlertComp 
-            message="Tarefa atualizada com sucesso" 
+          <AlertComp
+            message="Tarefa atualizada com sucesso"
             setError={setEditSuccess}
             type="success"
           />

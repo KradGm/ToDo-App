@@ -1,15 +1,18 @@
-import * as Component from "./styles";
 import { useCallback, useEffect, useState } from "react";
+import { Task } from "../../model/Task";
+
+//Styles
+import * as Component from "./styles";
 import TextArea from "antd/es/input/TextArea";
 import { Button, Form, Input, Select } from "antd";
 import { SaveTwoTone } from "@ant-design/icons";
-import { Task } from "../../model/Task";
 
 type Props = {
   task?: Task;
   onRequestPost: (data: Task) => void;
   onRequestPatch: (data: Task) => void;
 };
+
 export const TaskForm: React.FC<Props> = ({
   task,
   onRequestPost,
@@ -24,7 +27,8 @@ export const TaskForm: React.FC<Props> = ({
         id: task.id,
         status: values.status,
         taskName: values.taskName,
-        description: values.description});
+        description: values.description,
+      });
       console.log(`Status atualizado para: ${values.status}`);
     } else {
       onRequestPost(form.getFieldsValue());
@@ -47,14 +51,23 @@ export const TaskForm: React.FC<Props> = ({
   return (
     <Component.Container>
       <Form form={form} onFinish={onFinish} layout="vertical" name="basic">
-        
-        {isEdit ?<Component.FormTitle>Editar Tarefa</Component.FormTitle> : <Component.FormTitle>Criar Tarefa</Component.FormTitle>}
+        {isEdit ? (
+          <Component.FormTitle>Editar Tarefa</Component.FormTitle>
+        ) : (
+          <Component.FormTitle>Criar Tarefa</Component.FormTitle>
+        )}
 
         <Form.Item<Task> label="Nome da Tarefa:" name="taskName">
           <Input placeholder="Nome da tarefa" maxLength={20} required />
         </Form.Item>
         <Form.Item<Task> label="Select" name="status">
-        <Select options={[{ value:0, label:<span>Concluido</span> },{ value:1, label: <span>Não Iniciado</span> },{ value:2, label: <span>Em Andamento</span> }]}/>
+          <Select
+            options={[
+              { value: 0, label: <span>Concluido</span> },
+              { value: 1, label: <span>Não Iniciado</span> },
+              { value: 2, label: <span>Em Andamento</span> },
+            ]}
+          />
         </Form.Item>
         <Form.Item<Task> name="description" label="Descreva sua tarefa">
           <TextArea placeholder="Descreva sua tarefa" rows={4} maxLength={60} />

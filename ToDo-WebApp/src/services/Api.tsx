@@ -5,7 +5,7 @@ const endPointGetAll = "api/task-list";
 const endPointPost = "api/tasks";
 const endPointPatch = "api/tasks/";
 const endPointDelete = "/api/tasks/";
-const endPointGetByName="api/task-list/";
+const endPointGetByName = "api/task-list/";
 
 const api = axios.create({
   baseURL: "http://localhost:5287/",
@@ -23,16 +23,15 @@ export const onPost = async (data: Task) => {
 };
 
 //getByName
-export const onGetByNameList = (
-  async (name: string) => {
-    try {
-      const response = await api.get(`${endPointGetByName}${name}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  });
+export const onGetByNameList = async (name: string) => {
+  try {
+    const response = await api.get(`${endPointGetByName}${name}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
 
 //getAll
 export const onGetAllTasks = async () => {
@@ -53,7 +52,6 @@ export const onPatch = async (data: Task) => {
       status: data.status,
       description: data.description,
     });
-    
   } catch (error) {
     console.error(error);
   }
@@ -61,11 +59,11 @@ export const onPatch = async (data: Task) => {
 
 //delete
 export const onDelete = async (taskid: number) => {
-    try {
-      await api.delete(`${endPointDelete}${taskid}`);
-    } catch (error) {
-      console.error(error);
-    }
+  try {
+    await api.delete(`${endPointDelete}${taskid}`);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export default api;

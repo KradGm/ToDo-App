@@ -1,16 +1,23 @@
-import { PlusCircleFilled } from "@ant-design/icons";
-import { TaskForm } from "../TaskForm";
-import * as Component from "./styles";
 import React, { useState } from "react";
+import { TaskForm } from "../TaskForm";
 import { Task } from "../../model/Task";
+
+//Styles
+import { PlusCircleFilled } from "@ant-design/icons";
 import { Button, Modal } from "antd";
+import * as Component from "./styles";
+
 type Props = {
-  onRequestPost: (data:Task)=>void;
-  onRequestPatch: (data:Task)=>void;
-  task?:Task;
+  onRequestPost: (data: Task) => void;
+  onRequestPatch: (data: Task) => void;
+  task?: Task;
 };
 
-export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) => {
+export const AddTask: React.FC<Props> = ({
+  onRequestPost,
+  onRequestPatch,
+  task,
+}) => {
   const [showForm, setShowForm] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -18,7 +25,7 @@ export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) 
     setShowForm(!showForm);
     showModal();
   };
-  
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -36,10 +43,22 @@ export const AddTask:React.FC<Props> = ({ onRequestPost, onRequestPatch,task }) 
       <Component.Button onClick={handleClick}>
         <PlusCircleFilled />
       </Component.Button>
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+      <Modal
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
           <Button key="back" onClick={handleCancel}>
             Cancelar
-          </Button>]}><TaskForm task={task} onRequestPatch={onRequestPatch} onRequestPost={onRequestPost}/></Modal> 
+          </Button>,
+        ]}
+      >
+        <TaskForm
+          task={task}
+          onRequestPatch={onRequestPatch}
+          onRequestPost={onRequestPost}
+        />
+      </Modal>
     </Component.Container>
   );
 };
