@@ -1,71 +1,39 @@
-import { useCallback } from 'react';
-import { Task } from '../../Model/Task';
-import api from '../../services/Api';
-import * as Component from './styles';
-import { CloseOutlined, SaveTwoTone } from '@ant-design/icons';
-import {  Button, Form, Input, Select } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
+import { useEffect } from "react";
+import { Task } from "../../model/Task";
+import * as Component from "./styles";
+import { TaskForm } from "../TaskForm";
+import { Button, Modal } from "antd";
 
 type Props = {
-    task: Task;
-    setShow: (boolean: boolean) => void;
-    handlerUpdate: ()=> void;
-}
+  task: Task;
+  onRequestPatch: (data:Task)=>void;
+  onRequestPost:(data:Task)=>void;
+  isModalOpen:boolean;
+  setIsModalOpen:(boolean:boolean)=>void;
+};
 
-export const EditForm = ({ task, setShow, handlerUpdate }: Props) => {
-    const [form] = Form.useForm();
+export const EditForm:React.FC<Props> = ({ task, onRequestPatch, onRequestPost,isModalOpen,setIsModalOpen }) => {
+  
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
 
-    const handleSubmit = useCallback( async () => {
-        const taskName = form.getFieldValue("taskName");
-        const description = form.getFieldValue("description");
-        const status = form.getFieldValue("status");
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  
+  useEffect(()=>{
+    console.log(isModalOpen);
+  }, [])
 
-        const numberStatus = parseInt(status);
-        try{
-            await api.put(`api/tasks/${task.id}`, { id: task.id, taskName: taskName, status: numberStatus, description: description });
-        }catch(error:any){
-                console.error(error.response.data);
-                alert('Já existe uma tarefa com esse nome');
-        }
-        handlerUpdate();
-    }, [form, task.id]);
-
-    return (
-        <Component.Modal>
-            <Component.EditForm>
-                <Component.CloseButton onClick={()=> setShow(false)} ><CloseOutlined /></Component.CloseButton>
-                <Form
-                    form={form}
-                    onFinish={()=>{handleSubmit();
-                    setShow(false);
-                    }}
-                    layout="vertical"
-                    name='basic'>
-                    <Form.Item<Task>
-                        label="Nome da Tarefa:"
-                        name="taskName"
-                        initialValue={task.taskName}>
-                        <Input required maxLength={20} />
-                    </Form.Item>
-                    <Form.Item<Task> label="Select"
-                        name="status"
-                        initialValue={task.status.toString()}>
-                        <Select>
-                            <Select.Option value="0">Concluido</Select.Option>
-                            <Select.Option value="1">Não iniciado</Select.Option>
-                            <Select.Option value="2">Em andamento</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item<Task> name="description" label="Descreva sua tarefa" initialValue={task.description}>
-                        <TextArea rows={4} maxLength={60} />
-                    </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button htmlType="submit">
-                <Component.SaveButton><SaveTwoTone /></Component.SaveButton>
-                 </Button>
-                </Form.Item>
-                </Form >
-            </Component.EditForm>
-        </Component.Modal>
-    );
-}
+  return (
+    <Component.Modal>
+      <Component.EditForm>
+        <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+          <Button key="back" onClick={handleCancel}>
+            Cancelar
+          </Button>]}><TaskForm  task={task} onRequestPatch={onRequestPatch} onRequestPost={onRequestPost} /></Modal>
+      </Component.EditForm>
+    </Component.Modal>
+  );
+};

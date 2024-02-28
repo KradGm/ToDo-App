@@ -59,17 +59,16 @@ public class TaskController : ControllerBase
     return task;
     }
 
-    [HttpPut("api/tasks/{id}")]
+    [HttpPatch("api/tasks/{id}")]
     public async Task<IActionResult> UpdateTask(long id, Task task){
         if(id != task.Id){
             return BadRequest();
         }
 
         _context.Entry(task).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == task.TaskName))
+        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == task.TaskName && taskExistente.Id != task.Id))
           throw new Exception("Registro duplicado");
         try{
-            
             await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException){
