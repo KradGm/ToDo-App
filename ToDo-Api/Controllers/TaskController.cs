@@ -61,9 +61,48 @@ public class TaskController : ControllerBase
     }
 
     [HttpPatch("api/tasks/{id}")]
+    public async Task<IActionResult> UpdateTask(long id, [FromBody] Task task)
+    {
+        var updatedTask = await _context.Tasks.FindAsync(id);
+    if (updatedTask != null)
+    {
+
+        if (updatedTask == null)
+        {
+            return NotFound();
+        }
+
+        if(task.TaskName !=null){
+            updatedTask.TaskName = task.TaskName;
+        }
+        if(task.Status != task.Status){
+            updatedTask.Status = task.Status;
+        }
+        if(task.Description != task.Description){
+            updatedTask.Description = task.Description;
+        }
+
+
+        if (!ModelState.IsValid)
+        {   
+            return BadRequest(ModelState);
+        }
+
+        await _context.SaveChangesAsync();
+
+        return new ObjectResult(updatedTask);
+    }
+    else
+    {
+        return BadRequest(ModelState);
+    }
+    }
+
+    /*
+    [HttpPatch("api/tasks/{id}")]
     public async Task<IActionResult> UpdateTask(long id, Task task){
         if(id != task.Id){
-            return BadRequest();
+            return NotFound();
         }
 
         _context.Entry(task).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -79,6 +118,7 @@ public class TaskController : ControllerBase
         }
         return NoContent();
     }
+    */
     [HttpDelete("api/tasks/{id}")]
     public async Task<ActionResult> DeleteTask(long id){
         var taskToDelete = await _context.Tasks.FindAsync(id);
