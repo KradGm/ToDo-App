@@ -9,6 +9,7 @@ interface InputCompProps {
 }
 
 export const InputComp: React.FC<InputCompProps> = ({ onRequestGetByName }) => {
+  
   const onSearch = useCallback(async (name: string) => {
     try {
       onRequestGetByName(name);

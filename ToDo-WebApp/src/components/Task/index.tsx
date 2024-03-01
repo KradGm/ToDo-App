@@ -21,7 +21,8 @@ export const TaskComp: React.FC<Props> = ({
   onRequestDelete
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(task.status);
+  const [status, setStatus] = useState(task.status);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -35,12 +36,12 @@ export const TaskComp: React.FC<Props> = ({
         status: value,
         description: task.description,
       });
-      setTaskStatus(value);
+      setStatus(value);
       console.log(`Status atualizado para: ${value}`);
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [onRequestPatch, task]);
 
   const handleDelete = useCallback(async (taskid: number) => {
     const confirmAct = window.confirm("Você tem certeza disso?");
@@ -52,25 +53,30 @@ export const TaskComp: React.FC<Props> = ({
         console.error(error);
       }
     }
-  }, []);
+  }, [onRequestDelete]);
 
   const handleClick = useCallback(() => {
     console.log("Abrir modal");
     showModal();
     console.log(isModalOpen);
-  }, []);
-  const handleStatusChange = (status: number) => {
-    setTaskStatus(status);
-  };
+  }, [isModalOpen]);
 
-  useEffect(()=>{
-    setTaskStatus(taskStatus);
-  },[taskStatus]);
+  useEffect(() => {
+    setStatus(task.status);
+  }, [task, status]);
 
   return (
     <Component.Container>
       <Component.Container>
-      <Select defaultValue={taskStatus} onChange={handleChange} options={[{ value:0, label: <span>Concluido</span> },{ value:1, label: <span>Não Iniciado</span> },{ value:2, label: <span>Em Andamento</span> }]}/>
+        <Select
+          defaultValue={status}
+          onChange={handleChange}
+          options={[
+            { value: 0, label: <span>Concluido</span> },
+            { value: 1, label: <span>Não Iniciado</span> },
+            { value: 2, label: <span>Em Andamento</span> },
+          ]}
+        />
         <label>{task.taskName}</label>
         <p>{task.description}</p>
       </Component.Container>

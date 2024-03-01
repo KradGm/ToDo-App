@@ -24,7 +24,7 @@ const App = () => {
   const [list, setList] = useState<Task[]>([]);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [editSucces, setEditSuccess] = useState(false);
+  const [editSuccess, setEditSuccess] = useState(false);
 
   const fetchTaskList = useCallback(async () => {
     try {
@@ -44,8 +44,8 @@ const App = () => {
 
   const onRequestPost = useCallback(async (data: Task) => {
     try {
-      await onPost(data);
-      fetchTaskList();
+      const newTask = await onPost(data);
+      setList((prevList) => [...prevList, newTask]);
       setSuccess(true);
     } catch (error) {
       setError(true);
@@ -54,8 +54,11 @@ const App = () => {
 
   const onRequestPatch = useCallback(async (data: Task) => {
     try {
-      await onPatch(data);
-      setList(await onGetAllTasks());
+      const updatedTask = await onPatch(data);
+      setList((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      ));
       setEditSuccess(true);
     } catch (error) {
       setError(true);
@@ -65,7 +68,7 @@ const App = () => {
   const onRequestDelete = useCallback(async (taskid: number) => {
     try {
       await onDelete(taskid);
-      setList(await onGetAllTasks());
+      setList((prevTasks) => prevTasks.filter((task) => task.id !== taskid));
     } catch (error) {
       console.error(error);
       setError(true);
@@ -93,7 +96,7 @@ const App = () => {
             type="success"
           />
         )}
-        {editSucces && (
+        {editSuccess && (
           <AlertComp
             message="Tarefa atualizada com sucesso"
             setError={setEditSuccess}
@@ -113,6 +116,7 @@ const App = () => {
             onRequestPost={onRequestPost}
             key={task.id}
             task={task}
+           
           />
         ))}
       </Components.Area>

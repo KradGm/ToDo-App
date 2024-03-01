@@ -52,6 +52,7 @@ export const onPatch = async (data: Task) => {
       status: data.status,
       description: data.description,
     });
+    return data;
   } catch (error) {
     console.error(error);
     throw error;

@@ -3,7 +3,7 @@ import { Task } from "../../model/Task";
 
 //Styles
 import * as Component from "./styles";
-import TextArea from "antd/es/input/TextArea";
+import TextArea from 'antd/lib/input/TextArea';
 import { Button, Form, Input, Select } from "antd";
 import { SaveTwoTone } from "@ant-design/icons";
 
@@ -38,7 +38,7 @@ export const TaskForm: React.FC<Props> = ({
     }
   }, [task, form]);
 
-  const onFinish = useCallback(async (values: any) => {
+  const onFinish = useCallback(async (values: Task) => {
     if (isEdit && task) {
       onRequestPatch({
         id: task.id,
@@ -50,6 +50,7 @@ export const TaskForm: React.FC<Props> = ({
     } else {
       onRequestPost(values);
       form.resetFields();
+      setSelectedStatus(undefined);
     }
     handleOk();
   }, [isEdit, task, onRequestPatch, onRequestPost, form, handleOk]);
@@ -70,7 +71,7 @@ export const TaskForm: React.FC<Props> = ({
         </Form.Item>
         <Form.Item<Task> label="Select" name="status">
           <Select
-          value={selectedStatus}
+            value={selectedStatus}
             options={[
               { value: 0, label: <span>Concluido</span> },
               { value: 1, label: <span>Não Iniciado</span> },

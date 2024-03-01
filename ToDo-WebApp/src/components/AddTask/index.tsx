@@ -18,11 +18,9 @@ export const AddTask: React.FC<Props> = ({
   onRequestPatch,
   task,
 }) => {
-  const [showForm, setShowForm] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = () => {
-    setShowForm(!showForm);
     showModal();
   };
 
@@ -30,11 +28,7 @@ export const AddTask: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
+  const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
@@ -45,16 +39,16 @@ export const AddTask: React.FC<Props> = ({
       </Component.Button>
       <Modal
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        onOk={handleCloseModal}
+        onCancel={handleCloseModal}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" onClick={handleCloseModal}>
             Cancelar
           </Button>,
         ]}
       >
         <TaskForm
-          handleOk={handleOk}
+          handleOk={handleCloseModal}
           task={task}
           onRequestPatch={onRequestPatch}
           onRequestPost={onRequestPost}

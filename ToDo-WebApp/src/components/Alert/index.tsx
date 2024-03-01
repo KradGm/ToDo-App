@@ -3,7 +3,7 @@ import { Alert, AlertProps } from "antd";
 
 type Props = {
  setError:(bool:boolean)=>void;
- message:(string);
+ message:string;
  type:(AlertProps["type"]);
 };
 

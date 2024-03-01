@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Task } from "../../model/Task";
 import { TaskForm } from "../TaskForm";
 
@@ -11,8 +10,7 @@ type Props = {
   onRequestPatch: (data: Task) => void;
   onRequestPost: (data: Task) => void;
   isModalOpen: boolean;
-  setIsModalOpen: (boolean: boolean) => void;
-  onStatusChange?: (status: number) => void;
+  setIsModalOpen: (isOpen: boolean) => void;
 };
 
 export const EditForm: React.FC<Props> = ({
@@ -21,7 +19,6 @@ export const EditForm: React.FC<Props> = ({
   onRequestPost,
   isModalOpen,
   setIsModalOpen,
-  onStatusChange
 }) => {
   const handleOk = () => {
     setIsModalOpen(false);
@@ -31,9 +28,6 @@ export const EditForm: React.FC<Props> = ({
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log(isModalOpen);
-  }, []);
 
   return (
     <Component.Modal>
@@ -53,7 +47,6 @@ export const EditForm: React.FC<Props> = ({
             task={task}
             onRequestPatch={onRequestPatch}
             onRequestPost={onRequestPost}
-            onStatusChange={onStatusChange}
           />
         </Modal>
       </Component.EditForm>
