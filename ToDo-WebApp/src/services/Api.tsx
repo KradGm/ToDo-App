@@ -11,19 +11,19 @@ const api = axios.create({
   baseURL: "http://localhost:5287/",
 });
 
-//post
-export const onPost = async (data: Task) => {
-  try {
-    const response = await api.post(endPointPost, data);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-//getByName
-export const onGetByNameList = async (name: string) => {
+export const apiService = {
+  //post
+  onPost: async (data: Task) => {
+    try {
+      const response = await api.post(endPointPost, data);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+  //getByName
+onGetByNameList:async (name: string) => {
   try {
     const response = await api.get(`${endPointGetByName}${name}`);
     return response.data;
@@ -31,20 +31,18 @@ export const onGetByNameList = async (name: string) => {
     console.error(error);
     return [];
   }
-};
-
+},
 //getAll
-export const onGetAllTasks = async () => {
+onGetAllTasks: async () => {
   try {
     const response = await api.get(endPointGetAll);
     return response.data;
   } catch (error) {
     console.error(error);
   }
-};
-
+},
 //patch
-export const onPatch = async (data: Task) => {
+onPatch: async (data: Task) => {
   try {
     await api.patch<Task>(`${endPointPatch}${data.id}`, {
       id: data.id,
@@ -57,15 +55,21 @@ export const onPatch = async (data: Task) => {
     console.error(error);
     throw error;
   }
-};
+},
 
 //delete
-export const onDelete = async (taskid: number) => {
+onDelete: async (taskid: number) => {
   try {
     await api.delete(`${endPointDelete}${taskid}`);
   } catch (error) {
     console.error(error);
   }
-};
+}
+}
+ 
+
+export const Example = ()=>{
+  
+}
 
 export default api;

@@ -6,6 +6,7 @@ import { EditForm } from "../EditForm";
 import * as Component from "./styles";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Select } from "antd";
+import { Status } from "../../model/Status";
 
 type Props = {
   task: Task;
@@ -27,7 +28,7 @@ export const TaskComp: React.FC<Props> = ({
     setIsModalOpen(true);
   };
 
-  const handleChange = useCallback(async (value: any) => {
+  const handleChange = useCallback(async (value: Status) => {
     console.log(value);
     try {
       onRequestPatch({

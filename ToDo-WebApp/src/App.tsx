@@ -8,13 +8,7 @@ import { InputComp } from "./components/Input";
 import { AlertComp } from "./components/Alert";
 
 //Services
-import {
-  onDelete,
-  onGetAllTasks,
-  onGetByNameList,
-  onPatch,
-  onPost,
-} from "./services/Api";
+import {apiService} from "./services/Api";
 
 //Styles
 import "./App.css";
@@ -28,7 +22,7 @@ const App = () => {
 
   const fetchTaskList = useCallback(async () => {
     try {
-      setList(await onGetAllTasks());
+      setList(await apiService.onGetAllTasks());
     } catch (error) {
       console.error(error);
     }
@@ -36,7 +30,7 @@ const App = () => {
 
   const onRequestGetByName = useCallback(async (name: string) => {
     try {
-      setList(await onGetByNameList(name));
+      setList(await apiService.onGetByNameList(name));
     } catch (error) {
       console.error(error);
     }
@@ -44,7 +38,7 @@ const App = () => {
 
   const onRequestPost = useCallback(async (data: Task) => {
     try {
-      const newTask = await onPost(data);
+      const newTask = await apiService.onPost(data);
       setList((prevList) => [...prevList, newTask]);
       setSuccess(true);
     } catch (error) {
@@ -52,9 +46,9 @@ const App = () => {
     }
   }, []);
 
-  const onRequestPatch = useCallback(async (data: Task) => {
+  const onRequestPatch = useCallback(async (data: any) => {
     try {
-      const updatedTask = await onPatch(data);
+      const updatedTask = await apiService.onPatch(data);
       setList((prevTasks) =>
       prevTasks.map((task) =>
         task.id === updatedTask.id ? updatedTask : task
@@ -67,7 +61,7 @@ const App = () => {
 
   const onRequestDelete = useCallback(async (taskid: number) => {
     try {
-      await onDelete(taskid);
+      await apiService.onDelete(taskid);
       setList((prevTasks) => prevTasks.filter((task) => task.id !== taskid));
     } catch (error) {
       console.error(error);
