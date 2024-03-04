@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Task } from "../model/Task";
+import { Task } from "../interfaces/Task";
 
-const endPointGetAll = "api/task-list";
 const endPointPost = "api/tasks";
 const endPointPatch = "api/tasks/";
 const endPointDelete = "/api/tasks/";
@@ -10,6 +9,7 @@ const endPointGetByName = "api/task-list/";
 const api = axios.create({
   baseURL: "http://localhost:5287/",
 });
+
 
 export const apiService = {
   //post
@@ -33,18 +33,11 @@ onGetByNameList:async (name: string) => {
   }
 },
 //getAll
-onGetAllTasks: async () => {
-  try {
-    const response = await api.get(endPointGetAll);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-},
+
 //patch
 onPatch: async (data: Task) => {
   try {
-    await api.patch<Task>(`${endPointPatch}${data.id}`, {
+    await api.put<Task>(`${endPointPatch}${data.id}`, {
       id: data.id,
       taskName: data.taskName,
       status: data.status,

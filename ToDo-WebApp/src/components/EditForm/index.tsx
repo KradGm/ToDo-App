@@ -1,4 +1,4 @@
-import { Task } from "../../model/Task";
+import { Task } from "../../interfaces/Task";
 import { TaskForm } from "../TaskForm";
 
 //Styles

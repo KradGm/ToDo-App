@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-
+import { useCallback, useState } from "react";
+import { useTaskData } from './hooks/useTaskData';
 //Componentes
-import { Task } from "./model/Task";
+import { Task } from "./interfaces/Task";
 import { TaskComp } from "./components/Task";
 import { AddTask } from "./components/AddTask";
 import { InputComp } from "./components/Input";
@@ -16,17 +16,10 @@ import * as Components from "./App.styles";
 
 const App = () => {
   const [list, setList] = useState<Task[]>([]);
+  const { data } =  useTaskData();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
-
-  const fetchTaskList = useCallback(async () => {
-    try {
-      setList(await apiService.onGetAllTasks());
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
 
   const onRequestGetByName = useCallback(async (name: string) => {
     try {
@@ -46,13 +39,14 @@ const App = () => {
     }
   }, []);
 
-  const onRequestPatch = useCallback(async (data: any) => {
+  const onRequestPatch = useCallback(async (data: Task) => {
     try {
       const updatedTask = await apiService.onPatch(data);
       setList((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
-      ));
+        prevTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
       setEditSuccess(true);
     } catch (error) {
       setError(true);
@@ -68,10 +62,6 @@ const App = () => {
       setError(true);
     }
   }, []);
-
-  useEffect(() => {
-    fetchTaskList();
-  }, [setList, fetchTaskList]);
 
   return (
     <Components.Container>
@@ -103,14 +93,13 @@ const App = () => {
           onRequestPatch={onRequestPatch}
           onRequestPost={onRequestPost}
         />
-        {list.map((task) => (
+        {data?.map((task) => (
           <TaskComp
             onRequestDelete={onRequestDelete}
             onRequestPatch={onRequestPatch}
             onRequestPost={onRequestPost}
             key={task.id}
             task={task}
-           
           />
         ))}
       </Components.Area>

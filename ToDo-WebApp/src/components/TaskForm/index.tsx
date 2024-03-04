@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Task } from "../../model/Task";
+import { Task } from "../../interfaces/Task";
 
 //Styles
 import * as Component from "./styles";

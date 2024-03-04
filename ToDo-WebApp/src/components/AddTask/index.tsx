@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TaskForm } from "../TaskForm";
-import { Task } from "../../model/Task";
+import { Task } from "../../interfaces/Task";
 
 //Styles
 import { PlusCircleFilled } from "@ant-design/icons";

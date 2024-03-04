@@ -1,4 +1,4 @@
-import { Task } from "../../model/Task";
+import { Task } from "../../interfaces/Task";
 import { useCallback, useEffect, useState } from "react";
 import { EditForm } from "../EditForm";
 
@@ -6,7 +6,7 @@ import { EditForm } from "../EditForm";
 import * as Component from "./styles";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { Select } from "antd";
-import { Status } from "../../model/Status";
+import { Status } from "../../interfaces/Status";
 
 type Props = {
   task: Task;
