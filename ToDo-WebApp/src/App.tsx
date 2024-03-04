@@ -15,7 +15,7 @@ import "./App.css";
 import * as Components from "./App.styles";
 
 const App = () => {
-  const [list, setList] = useState<Task[]>([]);
+  const [, setList] = useState<Task[]>([]);
   const { data } =  useTaskData();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);

@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import api from "../services/Api";
 import { AxiosPromise } from "axios";
-import { Task, TaskResponse } from "../interfaces/Task";
+import { Task } from "../interfaces/Task";
 
 const endPointGetAll = "api/task-list";
 
