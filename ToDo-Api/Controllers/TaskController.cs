@@ -15,25 +15,23 @@ namespace ToDoProject.Controllers;
 [EnableCors]
 public class TaskController : ControllerBase
 {
-    private readonly IDbContext _context;
     private readonly IService _service;
 
-    public TaskController(IService service, IDbContext context)
+    public TaskController(IService service)
     {
         _service = service;
-        _context = context;
     }
 
     [HttpGet("api/task-list")]
-    public ActionResult<IEnumerable<TaskToDo>> GetAllTasks()
+    public async Task<ActionResult<IEnumerable<TaskToDo>>> GetAllTasks()
     {
-        var result = _service.GetAllAsync();
+        var result = await _service.GetAllAsync();
         return Ok(result);
     }
     [HttpGet("api/task-list/{name}")]
-    public ActionResult<IEnumerable<TaskToDo>> GetTaskByName(string name)
+    public async Task<ActionResult<IEnumerable<TaskToDo>>> GetTaskByName(string name)
     {
-        var taskToDo = _service.Read(name);
+        var taskToDo = await _service.Read(name);
         return Ok(taskToDo);
     }
 
@@ -48,7 +46,7 @@ public class TaskController : ControllerBase
     [HttpGet("api/tasks/{id}")]
     public async Task<ActionResult<TaskToDo>> GetTaskByID(Guid id)
     {
-        var task = await _context.Tasks.FindAsync(id);
+        var task = await _service.ReadById(id);
         if (task == null)
         {
             return NotFound();
@@ -57,30 +55,22 @@ public class TaskController : ControllerBase
     }
 
     [HttpPut("api/tasks/{name}")]
-    public async Task<IActionResult> UpdateTask(string name, [FromBody] TaskToDo task)
+    public async Task<ActionResult> UpdateTask(string name, [FromBody] TaskToDo task)
     {
-        Task<TaskToDo> updatedTask = _service.Update(task, name);
-        if (updatedTask != null)
-        {
-
-            if (updatedTask == null)
-            {
-                return NotFound();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _context.SaveChangesAsync();
-
-            return new ObjectResult(updatedTask);
-        }
-        else
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
+
+        TaskToDo updatedTask = await _service.Update(task, name);
+
+        if (updatedTask == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(updatedTask);
+
     }
 
     /*
@@ -105,10 +95,9 @@ public class TaskController : ControllerBase
     }
     */
     [HttpDelete("api/tasks/{name}")]
-    public async Task<ActionResult> DeleteTaskAsync(string name)
+    public async Task<ActionResult<TaskToDo>> DeleteTaskAsync(string name)
     {
-        _service.Delete(name);
-        await _context.SaveChangesAsync();
+        await _service.Delete(name);
         return Ok();
     }
 }

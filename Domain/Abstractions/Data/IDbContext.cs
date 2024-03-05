@@ -10,7 +10,7 @@ namespace Domain.Abstractions.Data
 {
     public interface IDbContext
     {
-        public DbSet<TaskToDo> Tasks { get; set; }
+        DbSet<TaskToDo> Tasks { get; set; }
         Task<int> SaveChangesAsync();
 
     }

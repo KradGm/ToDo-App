@@ -32,7 +32,7 @@ namespace Domain.Services
 
         public async Task<TaskToDo> Delete(string name)
         {
-            TaskToDo taskToDelete = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
+            TaskToDo? taskToDelete = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
             if (taskToDelete != null)
             {
                 _context.Tasks.Remove(taskToDelete);
@@ -40,7 +40,6 @@ namespace Domain.Services
             }
             return taskToDelete;
         }
-        //Update
         public async Task<IEnumerable<TaskToDo>> GetAllAsync()
         {
             return await _context.Tasks.ToListAsync();
@@ -48,16 +47,25 @@ namespace Domain.Services
 
         public async Task<TaskToDo> Read(string name)
         {
-            TaskToDo taskToSearch = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
-            if (name == null)
+            TaskToDo? taskToSearch = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
+            if (taskToSearch == null)
             {
-                throw new ArgumentException("Esse nome não existe");
+                throw new ArgumentException("Essa task não existe");
+            }
+            return taskToSearch;
+        }
+        public async Task<TaskToDo> ReadById(Guid id)
+        {
+            TaskToDo? taskToSearch = await _context.Tasks.FindAsync(id);
+            if (taskToSearch == null)
+            {
+                throw new ArgumentException("Essa task não existe");
             }
             return taskToSearch;
         }
         public async Task<TaskToDo> Update(TaskToDo updatedTask, string name)
         {
-            TaskToDo taskToUpdate = await _context.Tasks.FirstOrDefaultAsync(t => t.TaskName == name);
+            TaskToDo? taskToUpdate = await _context.Tasks.FirstOrDefaultAsync(t => t.TaskName == name);
 
             if (taskToUpdate == null)
             {

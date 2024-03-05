@@ -24,12 +24,14 @@ dist-ssr
 *.sw?
 
 # Build results
-
+/Debug
+/Bin
 [Dd]ebug/
 [Rr]elease/
 x64/
 [Bb]in/
 [Oo]bj/
+/Obj
 
 # User-specific files
 *.suo
@@ -66,3 +68,4 @@ x64/
 *.cache
 *.cs
 *.json
+.dll

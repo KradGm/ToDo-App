@@ -12,6 +12,9 @@ namespace Domain.Abstractions.Services
         Task<TaskToDo> Delete(string taskname);
         Task<IEnumerable<TaskToDo>> GetAllAsync();
         Task<TaskToDo> Read(string name);
+        Task<TaskToDo> ReadById(Guid id);
         Task<TaskToDo> Update(TaskToDo task, string value);
+
+       
     }
 }
