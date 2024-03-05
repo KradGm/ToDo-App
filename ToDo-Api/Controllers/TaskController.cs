@@ -39,8 +39,8 @@ public class TaskController : ControllerBase
     public ActionResult<TaskToDo> PostTask(TaskToDo newTask)
     {
         _service.Create(newTask);
-        CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
-        return Ok(newTask);
+        return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
+        //return Ok(newTask);
     }
 
     [HttpGet("api/tasks/{id}")]
@@ -98,6 +98,6 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<TaskToDo>> DeleteTaskAsync(string name)
     {
         await _service.Delete(name);
-        return Ok();
+        return NoContent();
     }
 }

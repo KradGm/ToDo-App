@@ -20,24 +20,26 @@ namespace Domain.Services
             _context = context;
         }
 
-        public Task Create(TaskToDo newTask)
+        public async Task Create(TaskToDo newTask)
         {
+            newTask.Validate();
             if (_context.Tasks.Any(taskExistente => taskExistente.TaskName == newTask.TaskName))
             {
                 throw new ArgumentException("Esse nome ja existe");
             }
             _context.Tasks.Add(newTask);
-            return _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<TaskToDo> Delete(string name)
         {
-            TaskToDo? taskToDelete = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
-            if (taskToDelete != null)
+            TaskToDo? taskToDelete = await FindTaskByNameAsync(name);
+            if (taskToDelete == null)
             {
-                _context.Tasks.Remove(taskToDelete);
-                await _context.SaveChangesAsync();
+                throw new ArgumentException("Essa Task não existe");
             }
+            _context.Tasks.Remove(taskToDelete);
+            await _context.SaveChangesAsync();
             return taskToDelete;
         }
         public async Task<IEnumerable<TaskToDo>> GetAllAsync()
@@ -47,12 +49,19 @@ namespace Domain.Services
 
         public async Task<TaskToDo> Read(string name)
         {
-            TaskToDo? taskToSearch = await _context.Tasks.FirstOrDefaultAsync(task => task.TaskName == name);
+            TaskToDo? taskToSearch = await FindTaskByNameAsync(name);
             if (taskToSearch == null)
             {
                 throw new ArgumentException("Essa task não existe");
             }
+
             return taskToSearch;
+        }
+        private async Task<TaskToDo?> FindTaskByNameAsync(string name)
+        {
+            return await _context.Tasks.FirstOrDefaultAsync(task =>
+                task.TaskName.Equals(name, StringComparison.OrdinalIgnoreCase)
+            );
         }
         public async Task<TaskToDo> ReadById(Guid id)
         {
@@ -63,18 +72,18 @@ namespace Domain.Services
             }
             return taskToSearch;
         }
-        public async Task<TaskToDo> Update(TaskToDo updatedTask, string name)
+        public async Task<TaskToDo> Update(TaskToDo actualTask, string name)
         {
-            TaskToDo? taskToUpdate = await _context.Tasks.FirstOrDefaultAsync(t => t.TaskName == name);
-
+            actualTask.Validate();
+            TaskToDo? taskToUpdate = await FindTaskByNameAsync(name);
             if (taskToUpdate == null)
             {
                 throw new ArgumentException("Esse nome não existe");
             }
 
-            taskToUpdate.TaskName = updatedTask.TaskName;
-            taskToUpdate.Status = updatedTask.Status;
-            taskToUpdate.Description = updatedTask.Description;
+            taskToUpdate.TaskName = actualTask.TaskName;
+            taskToUpdate.Status = actualTask.Status;
+            taskToUpdate.Description = actualTask.Description;
 
 
             await _context.SaveChangesAsync();
