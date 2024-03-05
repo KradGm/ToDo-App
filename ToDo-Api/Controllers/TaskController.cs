@@ -3,7 +3,11 @@ using System.Data.Entity.Infrastructure;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using TodoApi.Models;
+using Domain.Entities;
+using Domain.Abstractions.Services;
+using Domain.Data;
+using Domain.Abstractions.Data;
+using Domain.Services;
 namespace ToDoProject.Controllers;
 
 [ApiController]
@@ -11,91 +15,72 @@ namespace ToDoProject.Controllers;
 [EnableCors]
 public class TaskController : ControllerBase
 {
-    private readonly TaskListContext _context;
+    private readonly IDbContext _context;
+    private readonly IService _service;
 
-    public TaskController(TaskListContext context)
+    public TaskController(IService service, IDbContext context)
     {
+        _service = service;
         _context = context;
     }
+
     [HttpGet("api/task-list")]
-    public ActionResult<IEnumerable<Task>> GetAllTasks()
+    public ActionResult<IEnumerable<TaskToDo>> GetAllTasks()
     {
-        return _context.Tasks.ToList();
+        var result = _service.GetAllAsync();
+        return Ok(result);
     }
     [HttpGet("api/task-list/{name}")]
-    public  ActionResult<IEnumerable<Task>> GetTaskByName(string name)
+    public ActionResult<IEnumerable<TaskToDo>> GetTaskByName(string name)
     {
-        var tasklist = _context.Tasks.ToList();
-        var filterList = new List<Task>();
-        if(tasklist == null){
-           return NotFound(tasklist);
-        }
-         for(int i=0; i<tasklist.Count; i++){
-            if(tasklist[i].TaskName != null && tasklist[i].TaskName.Contains(name)){
-                filterList.Add(tasklist[i]);
-            }
-        }
-        return filterList;
+        var taskToDo = _service.Read(name);
+        return Ok(taskToDo);
     }
 
     [HttpPost("api/tasks")]
-    public async Task<ActionResult<Task>> PostTask(Task newTask)
+    public ActionResult<TaskToDo> PostTask(TaskToDo newTask)
     {
-        
-        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == newTask.TaskName)){
-          //throw new Exception("Registro duplicado");
-          throw new ArgumentException("testError");
-          }
-        _context.Tasks.Add(newTask);
-        await _context.SaveChangesAsync();  
-        return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
+        _service.Create(newTask);
+        CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
+        return Ok(newTask);
     }
+
     [HttpGet("api/tasks/{id}")]
-    public async Task<ActionResult<Task>> GetTaskByID(long id){
+    public async Task<ActionResult<TaskToDo>> GetTaskByID(Guid id)
+    {
         var task = await _context.Tasks.FindAsync(id);
-        if(task == null)
+        if (task == null)
         {
             return NotFound();
         }
-    return task;
+        return task;
     }
 
-    [HttpPatch("api/tasks/{id}")]
-    public async Task<IActionResult> UpdateTask(long id, [FromBody] Task task)
+    [HttpPut("api/tasks/{name}")]
+    public async Task<IActionResult> UpdateTask(string name, [FromBody] TaskToDo task)
     {
-        var updatedTask = await _context.Tasks.FindAsync(id);
-    if (updatedTask != null)
-    {
-
-        if (updatedTask == null)
+        Task<TaskToDo> updatedTask = _service.Update(task, name);
+        if (updatedTask != null)
         {
-            return NotFound();
-        }
 
-        if(task.TaskName !=null){
-            updatedTask.TaskName = task.TaskName;
-        }
-        if(task.Status != task.Status){
-            updatedTask.Status = task.Status;
-        }
-        if(task.Description != task.Description){
-            updatedTask.Description = task.Description;
-        }
+            if (updatedTask == null)
+            {
+                return NotFound();
+            }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        if (!ModelState.IsValid)
-        {   
+            await _context.SaveChangesAsync();
+
+            return new ObjectResult(updatedTask);
+        }
+        else
+        {
             return BadRequest(ModelState);
         }
-
-        await _context.SaveChangesAsync();
-
-        return new ObjectResult(updatedTask);
-    }
-    else
-    {
-        return BadRequest(ModelState);
-    }
     }
 
     /*
@@ -119,20 +104,11 @@ public class TaskController : ControllerBase
         return NoContent();
     }
     */
-    [HttpDelete("api/tasks/{id}")]
-    public async Task<ActionResult> DeleteTask(long id){
-        var taskToDelete = await _context.Tasks.FindAsync(id);
-        if(taskToDelete == null){
-            return NotFound();
-        }
-
-        _context.Tasks.Remove(taskToDelete);
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
-    private bool TaskExists(long id)
+    [HttpDelete("api/tasks/{name}")]
+    public async Task<ActionResult> DeleteTaskAsync(string name)
     {
-        return _context.Tasks.Any(item => item.Id == id);
+        _service.Delete(name);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
-
 }
