@@ -32,6 +32,7 @@ x64/
 [Bb]in/
 [Oo]bj/
 /Obj
+/obj
 
 # User-specific files
 *.suo
