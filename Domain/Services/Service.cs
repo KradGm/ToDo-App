@@ -1,28 +1,26 @@
 ﻿using Domain.Abstractions.Data;
 using Domain.Abstractions.Services;
 using Domain.Entities;
+using Domain.Validators.Entities;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Domain.Services
 {
     public class Service : IService
     {
         private readonly IDbContext _context;
+        private readonly IValidator<TaskToDo> _validator;
 
-        public Service(IDbContext context)
+        public Service(IDbContext context, IValidator<TaskToDo> validator)
         {
             _context = context;
+            _validator = validator;
         }
 
         public async Task Create(TaskToDo newTask)
         {
-            newTask.Validate();
+            await _validator.ValidateAndThrowAsync(newTask);
             if (_context.Tasks.Any(taskExistente => taskExistente.TaskName == newTask.TaskName))
             {
                 throw new ArgumentException("Esse nome ja existe");
@@ -74,7 +72,6 @@ namespace Domain.Services
         }
         public async Task<TaskToDo> Update(TaskToDo actualTask, string name)
         {
-            actualTask.Validate();
             TaskToDo? taskToUpdate = await FindTaskByNameAsync(name);
             if (taskToUpdate == null)
             {

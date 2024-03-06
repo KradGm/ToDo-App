@@ -1,13 +1,7 @@
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Domain.Entities;
 using Domain.Abstractions.Services;
-using Domain.Data;
-using Domain.Abstractions.Data;
-using Domain.Services;
+using Domain.Entities;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 namespace ToDoProject.Controllers;
 
 [ApiController]
@@ -36,11 +30,10 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost("api/tasks")]
-    public ActionResult<TaskToDo> PostTask(TaskToDo newTask)
+    public ActionResult<TaskToDo> PostTask([FromBody] TaskToDo newTask)
     {
         _service.Create(newTask);
         return CreatedAtAction(nameof(GetTaskByID), new { id = newTask.Id }, newTask);
-        //return Ok(newTask);
     }
 
     [HttpGet("api/tasks/{id}")]
