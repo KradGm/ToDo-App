@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Validators.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Services
 {
@@ -81,7 +82,7 @@ namespace Domain.Services
             taskToUpdate.TaskName = actualTask.TaskName;
             taskToUpdate.Status = actualTask.Status;
             taskToUpdate.Description = actualTask.Description;
-
+            await _validator.ValidateAndThrowAsync(taskToUpdate);
 
             await _context.SaveChangesAsync();
 
