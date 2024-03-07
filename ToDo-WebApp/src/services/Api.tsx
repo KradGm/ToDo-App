@@ -2,9 +2,9 @@ import axios from "axios";
 import { Task } from "../interfaces/Task";
 
 const endPointPost = "api/tasks";
-const endPointPatch = "api/tasks/";
+const endPointPut = "api/tasks/";
 const endPointDelete = "/api/tasks/";
-const endPointGetByName = "api/task-list/";
+const endPointGetAll = "api/task-list";
 
 const api = axios.create({
   baseURL: "http://localhost:5287/",
@@ -18,14 +18,13 @@ export const apiService = {
       const response = await api.post(endPointPost, data);
       return response.data;
     } catch (error) {
-      console.error(error);
       throw error;
     }
   },
   //getByName
-onGetByNameList:async (name: string) => {
+onGetAll:async (name: string) => {
   try {
-    const response = await api.get(`${endPointGetByName}${name}`);
+    const response = await api.get(`${endPointGetAll}${name}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -35,10 +34,9 @@ onGetByNameList:async (name: string) => {
 //getAll
 
 //patch
-onPatch: async (data: Task) => {
+onPut: async (data: Task, taskName:string) => {
   try {
-    await api.put<Task>(`${endPointPatch}${data.id}`, {
-      id: data.id,
+    await api.put<Task>(`${endPointPut}${taskName}`, {
       taskName: data.taskName,
       status: data.status,
       description: data.description,

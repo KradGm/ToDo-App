@@ -22,10 +22,16 @@ public class TaskController : ControllerBase
         var result = await _service.GetAllAsync();
         return Ok(result);
     }
-    [HttpGet("api/task-list/{name}")]
+    [HttpGet("api/task/{name}")]
     public async Task<ActionResult<IEnumerable<TaskToDo>>> GetTaskByName(string name)
     {
         var taskToDo = await _service.Read(name);
+        return Ok(taskToDo);
+    }
+    [HttpGet("api/task-list/{name}")]
+    public async Task<ActionResult<IEnumerable<TaskToDo>>> GetTasksByName(string name)
+    {
+        var taskToDo = await _service.GetTasksToDoByName(name);
         return Ok(taskToDo);
     }
 
@@ -37,7 +43,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet("api/tasks/{id}")]
-    public async Task<ActionResult<TaskToDo>> GetTaskByID(Guid id)
+    public async Task<ActionResult<TaskToDo>> GetTaskByID(long id)
     {
         var task = await _service.ReadById(id);
         if (task == null)
@@ -66,27 +72,6 @@ public class TaskController : ControllerBase
 
     }
 
-    /*
-    [HttpPatch("api/tasks/{id}")]
-    public async Task<IActionResult> UpdateTask(long id, Task task){
-        if(id != task.Id){
-            return NotFound();
-        }
-
-        _context.Entry(task).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-        if(_context.Tasks.Any(taskExistente=>taskExistente.TaskName == task.TaskName && taskExistente.Id != task.Id))
-          throw new Exception("Registro duplicado");
-        try{
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException){
-            if(!TaskExists(id)){
-                return NotFound();
-            }throw;
-        }
-        return NoContent();
-    }
-    */
     [HttpDelete("api/tasks/{name}")]
     public async Task<ActionResult<TaskToDo>> DeleteTaskAsync(string name)
     {

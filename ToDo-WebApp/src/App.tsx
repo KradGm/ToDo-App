@@ -1,53 +1,52 @@
 import { useCallback, useState } from "react";
-import { useTaskData } from './hooks/useTaskData';
-//Componentes
+import { useTaskData } from "./hooks/useTaskData";
+// Componentes
 import { Task } from "./interfaces/Task";
 import { TaskComp } from "./components/Task";
 import { AddTask } from "./components/AddTask";
 import { InputComp } from "./components/Input";
 import { AlertComp } from "./components/Alert";
 
-//Services
-import {apiService} from "./services/Api";
+// Services
+import { apiService } from "./services/Api";
 
-//Styles
+// Styles
 import "./App.css";
 import * as Components from "./App.styles";
 
 const App = () => {
-  const [, setList] = useState<Task[]>([]);
-  const { data } =  useTaskData();
+  const { data: tasks, isLoading, refetch, setTasks } = useTaskData();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [editSuccess, setEditSuccess] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const onRequestGetByName = useCallback(async (name: string) => {
+  const onRequestGetAll = useCallback(async (name: string) => {
     try {
-      setList(await apiService.onGetByNameList(name));
+      await setTasks(name);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [setTasks]);
 
   const onRequestPost = useCallback(async (data: Task) => {
     try {
-      const newTask = await apiService.onPost(data);
-      setList((prevList) => [...prevList, newTask]);
+      await apiService.onPost(data);
       setSuccess(true);
+      refetch();
     } catch (error) {
+      const customError = error as ErrorCustom;
       setError(true);
+      console.log(customError.response.data.errors.TaskName[0], "error");
+      setMessage(customError.response.data.errors.TaskName[0]);
     }
   }, []);
 
-  const onRequestPatch = useCallback(async (data: Task) => {
+  const onRequestPatch = useCallback(async (data: Task, taskName: string) => {
     try {
-      const updatedTask = await apiService.onPatch(data);
-      setList((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === updatedTask.id ? updatedTask : task
-        )
-      );
+      await apiService.onPut(data, taskName);
       setEditSuccess(true);
+      refetch();
     } catch (error) {
       setError(true);
     }
@@ -56,7 +55,7 @@ const App = () => {
   const onRequestDelete = useCallback(async (taskid: number) => {
     try {
       await apiService.onDelete(taskid);
-      setList((prevTasks) => prevTasks.filter((task) => task.id !== taskid));
+      refetch();
     } catch (error) {
       console.error(error);
       setError(true);
@@ -67,11 +66,7 @@ const App = () => {
     <Components.Container>
       <Components.Area>
         {error && (
-          <AlertComp
-            message="Ja existe uma tarefa com esse nome"
-            setError={setError}
-            type="error"
-          />
+          <AlertComp message={message} setError={setError} type="error" />
         )}
         {success && (
           <AlertComp
@@ -88,20 +83,25 @@ const App = () => {
           />
         )}
         <Components.Header>LISTA DE TAREFAS</Components.Header>
-        <InputComp onRequestGetByName={onRequestGetByName} />
+        <InputComp onRequestGetByName={onRequestGetAll} />
         <AddTask
           onRequestPatch={onRequestPatch}
           onRequestPost={onRequestPost}
         />
-        {data?.map((task) => (
-          <TaskComp
-            onRequestDelete={onRequestDelete}
-            onRequestPatch={onRequestPatch}
-            onRequestPost={onRequestPost}
-            key={task.id}
-            task={task}
-          />
-        ))}
+        {!isLoading && (
+          <>
+            {tasks?.map((task) => (
+              <TaskComp
+                onRequestDelete={onRequestDelete}
+                onRequestPatch={onRequestPatch}
+                onRequestPost={onRequestPost}
+                key={task.id}
+                task={task}
+              />
+            ))}
+          </>
+        )}
+        {isLoading && <p>carregando</p>}
       </Components.Area>
     </Components.Container>
   );

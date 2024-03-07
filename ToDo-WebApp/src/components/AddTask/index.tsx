@@ -9,7 +9,7 @@ import * as Component from "./styles";
 
 type Props = {
   onRequestPost: (data: Task) => void;
-  onRequestPatch: (data: Task) => void;
+  onRequestPatch: (data: Task, taskName:string) => void;
   task?: Task;
 };
 

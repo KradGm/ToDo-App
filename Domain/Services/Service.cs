@@ -22,10 +22,6 @@ namespace Domain.Services
         public async Task Create(TaskToDo newTask)
         {
             await _validator.ValidateAndThrowAsync(newTask);
-            if (_context.Tasks.Any(taskExistente => taskExistente.TaskName == newTask.TaskName))
-            {
-                throw new ArgumentException("Esse nome ja existe");
-            }
             _context.Tasks.Add(newTask);
             await _context.SaveChangesAsync();
         }
@@ -62,7 +58,8 @@ namespace Domain.Services
                 task.TaskName.Equals(name, StringComparison.OrdinalIgnoreCase)
             );
         }
-        public async Task<TaskToDo> ReadById(Guid id)
+
+        public async Task<TaskToDo> ReadById(long id)
         {
             TaskToDo? taskToSearch = await _context.Tasks.FindAsync(id);
             if (taskToSearch == null)
@@ -71,24 +68,37 @@ namespace Domain.Services
             }
             return taskToSearch;
         }
-        public async Task<TaskToDo> Update(TaskToDo actualTask, string name)
+        public async Task<TaskToDo> Update(TaskToDo updatedTask, string name)
         {
             TaskToDo? taskToUpdate = await FindTaskByNameAsync(name);
-            if (taskToUpdate == null)
+            if (taskToUpdate != null)
             {
-                throw new ArgumentException("Esse nome não existe");
+                await _validator.ValidateAndThrowAsync(updatedTask);
+                taskToUpdate.TaskName = updatedTask.TaskName;
+                taskToUpdate.Status = updatedTask.Status;
+                taskToUpdate.Description = updatedTask.Description;
+
+                await _context.SaveChangesAsync();
+
+                return taskToUpdate;
             }
-
-            taskToUpdate.TaskName = actualTask.TaskName;
-            taskToUpdate.Status = actualTask.Status;
-            taskToUpdate.Description = actualTask.Description;
-            await _validator.ValidateAndThrowAsync(taskToUpdate);
-
-            await _context.SaveChangesAsync();
-
-            return taskToUpdate;
+            throw new ArgumentException("Esse nome não existe");
         }
 
+        public Task<IEnumerable<TaskToDo>> GetTasksToDoByName(string name)
+        {
+        var tasklist = _context.Tasks.ToList();
+        var filterList = new List<TaskToDo>();
+        if(tasklist == null){
+           throw new ArgumentException("Não existem tasks com esse nome");
+        }
+         for(int i=0; i<tasklist.Count; i++){
+            if(tasklist[i].TaskName != null && tasklist[i].TaskName.ToLower().Contains(name.ToLower())){
+                filterList.Add(tasklist[i]);
+            }
+        }
+        return Task.FromResult<IEnumerable<TaskToDo>>(filterList);
+        }
     }
 }
 

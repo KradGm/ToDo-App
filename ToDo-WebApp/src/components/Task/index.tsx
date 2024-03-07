@@ -10,7 +10,7 @@ import { Status } from "../../interfaces/Status";
 
 type Props = {
   task: Task;
-  onRequestPatch: (data: Task) => void;
+  onRequestPatch: (data: Task, taskName:string) => void;
   onRequestPost: (data: Task) => void;
   onRequestDelete: (id: number) => void;
 };
@@ -36,7 +36,7 @@ export const TaskComp: React.FC<Props> = ({
         taskName: task.taskName,
         status: value,
         description: task.description,
-      });
+      },task.taskName);
       setStatus(value);
       console.log(`Status atualizado para: ${value}`);
     } catch (error) {

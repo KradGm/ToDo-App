@@ -10,7 +10,7 @@ import { SaveTwoTone } from "@ant-design/icons";
 type Props = {
   task?: Task;
   onRequestPost: (data: Task) => void;
-  onRequestPatch: (data: Task) => void;
+  onRequestPatch: (data: Task, taskName:string) => void;
   handleOk:()=>void;
 };
 
@@ -45,7 +45,7 @@ export const TaskForm: React.FC<Props> = ({
         status: values.status,
         taskName: values.taskName,
         description: values.description,
-      });
+      }, task.taskName);
       console.log(`Status atualizado para: ${values.status}`);
     } else {
       onRequestPost(values);
@@ -59,7 +59,7 @@ export const TaskForm: React.FC<Props> = ({
 
   return (
     <Component.Container>
-      <Form form={form} onFinish={onFinish} layout="vertical" name="basic">
+      <Form form={form} onFinish={onFinish} layout="vertical" name={`basic-${isEdit ? 'edit' : 'create'}`}>
         {isEdit ? (
           <Component.FormTitle>Editar Tarefa</Component.FormTitle>
         ) : (

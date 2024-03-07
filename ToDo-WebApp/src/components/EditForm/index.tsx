@@ -7,7 +7,7 @@ import * as Component from "./styles";
 
 type Props = {
   task: Task;
-  onRequestPatch: (data: Task) => void;
+  onRequestPatch: (data: Task, taskName: string) => void;
   onRequestPost: (data: Task) => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
@@ -27,7 +27,6 @@ export const EditForm: React.FC<Props> = ({
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
 
   return (
     <Component.Modal>

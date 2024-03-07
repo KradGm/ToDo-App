@@ -5,7 +5,7 @@ import * as Component from "./styles";
 import Search from "antd/es/input/Search";
 
 interface InputCompProps {
-  onRequestGetByName: (name: string) => void;
+  onRequestGetByName: (name: string) => Promise<void>;
 }
 
 export const InputComp: React.FC<InputCompProps> = ({ onRequestGetByName }) => {
@@ -16,7 +16,7 @@ export const InputComp: React.FC<InputCompProps> = ({ onRequestGetByName }) => {
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [onRequestGetByName]);
 
   return (
     <Component.Container>
