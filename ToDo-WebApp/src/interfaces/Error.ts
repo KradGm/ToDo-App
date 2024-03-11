@@ -1,4 +1,4 @@
-interface Error {
+interface ErrorCustom {
 response:{
     data: {
         errors: {
